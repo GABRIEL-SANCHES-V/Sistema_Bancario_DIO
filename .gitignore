@@ -2,5 +2,6 @@
 *.venv
 
 .envrc
+.env
 
 teste.py
