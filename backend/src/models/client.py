@@ -8,6 +8,7 @@ class Client:
             name (str): Client's full name.
             cpf (str): Client's CPF (Brazilian ID).
             date_of_birth (date): Client's birth date.
+            age (int): Client's age.
     """
     def __init__(self, name: str, cpf: str, date_of_birth: str):
         self._name = name
