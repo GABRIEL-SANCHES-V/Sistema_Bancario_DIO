@@ -15,9 +15,6 @@ class Client:
         self._cpf = cpf
         self._date_of_birth = datetime.strptime(date_of_birth, "%d/%m/%Y").date()
 
-    def __str__(self):
-        return f'{"Dados do Cliente".center(50, "-")} \nNome: {self.name}\nCPF: {self.cpf}\nData de Nascimento: {self.date_of_birth}'
-    
     @property
     def name(self):
         return self._name
@@ -36,7 +33,7 @@ class Client:
 
     @property
     def date_of_birth(self):
-        return self._date_of_birth.strftime("%d/%m/%Y")
+        return self._date_of_birth
     
     @date_of_birth.setter
     def date_of_birth(self, date_of_birth: str):

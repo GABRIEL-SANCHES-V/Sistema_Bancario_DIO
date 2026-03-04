@@ -20,9 +20,6 @@ class Transaction:
         self._type_transaction = type_transaction
         self._value = value
         self._date = datetime.strptime(date, "%d/%m/%Y").date()
-
-    def __str__(self):
-        return f"{self.date.strftime('%d/%m/%Y')} - {self.type_transaction.value}: R${self.value:.2f}"
     
     @property
     def type_transaction(self):

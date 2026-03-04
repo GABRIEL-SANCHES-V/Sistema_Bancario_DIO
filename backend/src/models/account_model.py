@@ -23,19 +23,6 @@ class Account():
         self._extract = []
         self._password = password
 
-    def __str__(self):
-        title = "Dados da Conta".center(50, "-")
-        footer = "".center(50, "-")
-
-        return (
-            f"\n{self.cliente}\n"
-            f"{title}\n"
-            f"Número da Conta: {self.account_number}\n"
-            f"Saldo: R$ {self.balance:.2f}\n"
-            f"{self.format_extract()}\n"
-            f"{footer}"
-        )
-    
     @property
     def cliente(self):
         return self._cliente
