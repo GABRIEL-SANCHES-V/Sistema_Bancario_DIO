@@ -1,3 +1,3 @@
-from .account import Account
-from .client import Client
-from .transaction import Transaction, TransactionType
+from .account_model import Account
+from .client_model import Client
+from .transaction_model import Transaction, TransactionType

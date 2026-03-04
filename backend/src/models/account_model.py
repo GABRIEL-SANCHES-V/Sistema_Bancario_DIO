@@ -1,6 +1,6 @@
 from decimal import Decimal
-from .client import Client
-from .transaction import Transaction
+from .client_model import Client
+from .transaction_model import Transaction
 
 
 class Account():
