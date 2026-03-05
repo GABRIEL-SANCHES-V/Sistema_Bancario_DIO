@@ -1,4 +1,6 @@
 from datetime import datetime
+from datetime import date
+
 
 class Client:
     """
@@ -10,7 +12,7 @@ class Client:
             date_of_birth (date): Client's birth date.
             age (int): Client's age.
     """
-    def __init__(self, name: str, cpf: str, date_of_birth: datetime.date):
+    def __init__(self, name: str, cpf: str, date_of_birth: date):
         self._name = name
         self._cpf = cpf
         self._date_of_birth = date_of_birth
@@ -36,7 +38,7 @@ class Client:
         return self._date_of_birth
     
     @date_of_birth.setter
-    def date_of_birth(self, date_of_birth: datetime.date):
+    def date_of_birth(self, date_of_birth: date):
         self._date_of_birth = date_of_birth
 
     @property

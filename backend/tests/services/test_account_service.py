@@ -63,9 +63,9 @@ def test_account_service_extract(account_service):
 
     assert len(extract) == 2
     assert extract[0].type_transaction == TransactionType.DEPOSIT
-    assert extract[1].type_transaction == TransactionType.WITHDRAWN
-    assert extract[0].amount == Decimal("500.00")
-    assert extract[1].amount == Decimal("200.00")
+    assert extract[1].type_transaction == TransactionType.WITHDRAW
+    assert extract[0].value == Decimal("500.00")
+    assert extract[1].value == Decimal("200.00")
 
 
 @pytest.mark.parametrize("value", [
