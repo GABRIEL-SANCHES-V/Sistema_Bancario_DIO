@@ -2,6 +2,7 @@ import os
 import sys
 import pytest
 from decimal import Decimal
+from datetime import datetime
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
 
@@ -10,7 +11,7 @@ from models import Account, Client, Transaction, TransactionType
 
 @pytest.fixture
 def client():
-    return Client("Gabriel Sanches", "123.456.789-00", "01/01/1990")
+    return Client("Gabriel Sanches", "123.456.789-00", datetime.strptime("01/01/1990", "%d/%m/%Y").date())
 
 
 @pytest.fixture
@@ -40,7 +41,7 @@ def test_increment_balance(account):
     """
         Testa o incremento do saldo da conta.
     """
-    account._increment_balance(Decimal("500.00"))
+    account.increment_balance(Decimal("500.00"))
     assert account.balance == Decimal("1500.00")
 
 
@@ -48,7 +49,7 @@ def test_decrement_balance(account):
     """
         Testa o decremento do saldo da conta.
     """
-    account._decrement_balance(Decimal("200.00"))
+    account.decrement_balance(Decimal("200.00"))
     assert account.balance == Decimal("800.00")
 
 
@@ -56,7 +57,7 @@ def test_decrement_balance_full(account):
     """
         Testa o decremento do saldo da conta até zero.
     """
-    account._decrement_balance(Decimal("1000.00"))
+    account.decrement_balance(Decimal("1000.00"))
     assert account.balance == Decimal("0.00")
 
 
@@ -79,7 +80,7 @@ def test_add_transaction_to_extract(account):
     transaction = Transaction(
         TransactionType.DEPOSIT,
         Decimal("100.00"),
-        "01/01/2024"
+        datetime.strptime("01/01/2024", "%d/%m/%Y").date()
     )
 
     account.add_transaction_to_extract(transaction)
@@ -95,7 +96,7 @@ def test_extract_immutability(account):
     transaction = Transaction(
         TransactionType.DEPOSIT,
         Decimal("100.00"),
-        "01/01/2024"
+        datetime.strptime("01/01/2024", "%d/%m/%Y").date()
     )
 
     account.add_transaction_to_extract(transaction)

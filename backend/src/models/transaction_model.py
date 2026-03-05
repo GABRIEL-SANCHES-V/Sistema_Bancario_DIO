@@ -16,19 +16,19 @@ class Transaction:
             value (Decimal): Transaction value.
             date (date): Transaction date.
     """
-    def __init__(self, type_transaction: TransactionType, value: Decimal, date: str):
+    def __init__(self, type_transaction: TransactionType, value: Decimal, date: datetime.date):
         self._type_transaction = type_transaction
         self._value = value
-        self._date = datetime.strptime(date, "%d/%m/%Y").date()
+        self._date = date
     
     @property
-    def type_transaction(self):
+    def type_transaction(self) -> TransactionType:
         return self._type_transaction
 
     @property
-    def value(self):
+    def value(self) -> Decimal:
         return self._value
     
     @property
-    def date(self):
+    def date(self) -> datetime.date:
         return self._date

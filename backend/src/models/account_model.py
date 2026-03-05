@@ -1,6 +1,7 @@
 from decimal import Decimal
 from .client_model import Client
 from .transaction_model import Transaction
+from typing import List
 
 
 class Account():
@@ -24,25 +25,25 @@ class Account():
         self._password = password
 
     @property
-    def cliente(self):
+    def cliente(self) -> Client:
         return self._cliente
 
     @property
-    def account_number(self):
+    def account_number(self) -> int:
         return self._account_number
     
     @property
     def balance(self):
         return self._balance
     
-    def _increment_balance(self, value: Decimal):
+    def increment_balance(self, value: Decimal):
         self._balance += value
 
-    def _decrement_balance(self, value: Decimal):
+    def decrement_balance(self, value: Decimal):
         self._balance -= value
 
     @property
-    def withdraws_today(self):
+    def withdraws_today(self) -> int:
         return self._withdraws_today
     
     def increment_withdraws_today(self):
@@ -52,14 +53,14 @@ class Account():
         self._withdraws_today = 0
 
     @property
-    def extract(self):
-        return list(self._extract)
+    def extract(self) -> List:
+        return self._extract
     
     def add_transaction_to_extract(self, transaction: Transaction):
         self._extract.append(transaction)
     
     @property
-    def password(self):
+    def password(self) -> str:
         return self._password
     
     @password.setter

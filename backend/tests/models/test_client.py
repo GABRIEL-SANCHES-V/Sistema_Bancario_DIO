@@ -6,11 +6,12 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 from datetime import date
 from models import Client
+from datetime import datetime
 
 
 @pytest.fixture
 def client():
-    return Client("Gabriel Sanches", "123.456.789-00", "01/01/1990")
+    return Client("Gabriel Sanches", "123.456.789-00", datetime.strptime("01/01/1990", "%d/%m/%Y").date())
 
 
 def test_client_creation(client):
@@ -40,4 +41,4 @@ def test_invalid_date():
         Testa a criação de um cliente com uma data inválida, esperando que uma exceção seja levantada.
     """
     with pytest.raises(ValueError):
-        Client("Gabriel", "123", "32/13/2000")
+        Client("Gabriel", "123", datetime.strptime("32/13/2000", "%d/%m/%Y").date())

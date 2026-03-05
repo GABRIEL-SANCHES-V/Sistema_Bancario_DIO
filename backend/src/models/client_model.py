@@ -10,13 +10,13 @@ class Client:
             date_of_birth (date): Client's birth date.
             age (int): Client's age.
     """
-    def __init__(self, name: str, cpf: str, date_of_birth: str):
+    def __init__(self, name: str, cpf: str, date_of_birth: datetime.date):
         self._name = name
         self._cpf = cpf
-        self._date_of_birth = datetime.strptime(date_of_birth, "%d/%m/%Y").date()
+        self._date_of_birth = date_of_birth
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
     
     @name.setter
@@ -24,7 +24,7 @@ class Client:
         self._name = name
 
     @property
-    def cpf(self):
+    def cpf(self) -> str:
         return self._cpf
 
     @cpf.setter
@@ -32,15 +32,15 @@ class Client:
         self._cpf = cpf
 
     @property
-    def date_of_birth(self):
+    def date_of_birth(self) -> datetime.date:
         return self._date_of_birth
     
     @date_of_birth.setter
-    def date_of_birth(self, date_of_birth: str):
-        self._date_of_birth = datetime.strptime(date_of_birth, "%d/%m/%Y").date()
+    def date_of_birth(self, date_of_birth: datetime.date):
+        self._date_of_birth = date_of_birth
 
     @property
-    def age(self):
+    def age(self) -> int:
         today = datetime.today().date()
         return (
             today.year
