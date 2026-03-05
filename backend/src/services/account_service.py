@@ -39,7 +39,7 @@ class AccountService:
             Returns:
                 None
         """
-        self._account.extract.append(transaction)
+        self._account.add_transaction_to_extract(transaction)
     
 
     def deposit(self, value: Decimal) -> None:
@@ -117,4 +117,4 @@ class AccountService:
         if not self._account.extract:
             return []
         
-        return list(self._account.extract)
+        return self._account.extract

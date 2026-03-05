@@ -54,7 +54,7 @@ class Account():
 
     @property
     def extract(self) -> List:
-        return self._extract
+        return list(self._extract)
     
     def add_transaction_to_extract(self, transaction: Transaction):
         self._extract.append(transaction)
