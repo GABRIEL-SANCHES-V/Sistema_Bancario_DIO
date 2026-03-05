@@ -25,9 +25,7 @@ def account(client):
 
 
 def test_account_creation(account, client):
-    """
-        Testa a criação de uma conta com valores válidos.
-    """
+    """Testa a criação de uma conta com valores válidos."""
     assert account.cliente == client
     assert account.account_number == 123456
     assert account.balance == Decimal("1000.00")
@@ -38,33 +36,25 @@ def test_account_creation(account, client):
 
 
 def test_increment_balance(account):
-    """
-        Testa o incremento do saldo da conta.
-    """
+    """Testa o incremento do saldo da conta."""
     account.increment_balance(Decimal("500.00"))
     assert account.balance == Decimal("1500.00")
 
 
 def test_decrement_balance(account):
-    """
-        Testa o decremento do saldo da conta.
-    """
+    """Testa o decremento do saldo da conta."""
     account.decrement_balance(Decimal("200.00"))
     assert account.balance == Decimal("800.00")
 
 
 def test_decrement_balance_full(account):
-    """
-        Testa o decremento do saldo da conta até zero.
-    """
+    """Testa o decremento do saldo da conta até zero."""
     account.decrement_balance(Decimal("1000.00"))
     assert account.balance == Decimal("0.00")
 
 
 def test_withdraws_today(account):
-    """
-        Testa o incremento do número de saques realizados hoje.
-    """
+    """Testa o incremento do número de saques realizados hoje."""
     account.increment_withdraws_today()
     account.increment_withdraws_today()
     assert account.withdraws_today == 2
@@ -74,9 +64,7 @@ def test_withdraws_today(account):
 
 
 def test_add_transaction_to_extract(account):
-    """
-        Testa a adição de uma transação à extrato da conta.
-    """
+    """Testa a adição de uma transação à extrato da conta."""
     transaction = Transaction(
         TransactionType.DEPOSIT,
         Decimal("100.00"),
@@ -90,9 +78,7 @@ def test_add_transaction_to_extract(account):
 
 
 def test_extract_immutability(account):
-    """
-        Testa a imutabilidade do extrato da conta.
-    """
+    """Testa a imutabilidade do extrato da conta."""
     transaction = Transaction(
         TransactionType.DEPOSIT,
         Decimal("100.00"),
@@ -108,23 +94,18 @@ def test_extract_immutability(account):
 
 
 def test_password_setter(account):
-    """
-        Testa a funcionalidade do setter de senha da conta.
-    """
+    """Testa a funcionalidade do setter de senha da conta."""
     account.password = "new_password"
     assert account.password == "new_password"
 
+
 def test_invalid_account_creation_missing_account_number(client):
-    """
-        Testa a criação de uma conta sem o número da conta, esperando que uma exceção seja levantada.
-    """
+    """Testa a criação de uma conta sem o número da conta, esperando que uma exceção seja levantada."""
     with pytest.raises(TypeError):
         Account(cliente=client, password="123", balance=Decimal("1000.00"))
 
 
 def test_invalid_account_creation_missing_password(client):
-    """
-        Testa a criação de uma conta sem a senha, esperando que uma exceção seja levantada.
-    """
+    """Testa a criação de uma conta sem a senha, esperando que uma exceção seja levantada."""
     with pytest.raises(TypeError):
         Account(cliente=client, account_number=123456, balance=Decimal("1000.00"))

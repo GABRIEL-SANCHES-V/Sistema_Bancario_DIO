@@ -18,9 +18,7 @@ from models import Transaction, TransactionType
 )
 
 def test_transaction_creation(transaction_type, value, date):
-    """
-        Testa a criação de uma transação com valores válidos.
-    """
+    """Testa a criação de uma transação com valores válidos."""
     transaction = Transaction(transaction_type, value, date)
 
     assert transaction.type_transaction == transaction_type
@@ -28,8 +26,6 @@ def test_transaction_creation(transaction_type, value, date):
     assert transaction.date == date
 
 def test_invalid_transaction_type():
-    """
-        Testa a criação de uma transação com um tipo inválido, esperando que uma exceção seja levantada.
-    """
+    """Testa a criação de uma transação com um tipo inválido, esperando que uma exceção seja levantada."""
     with pytest.raises(ValueError):
         Transaction(None, Decimal("100.00"), datetime.strptime("32/13/2000", "%d/%m/%Y").date())

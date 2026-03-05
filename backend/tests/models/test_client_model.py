@@ -15,18 +15,14 @@ def client():
 
 
 def test_client_creation(client):
-    """
-        Testa a criação de um cliente com valores válidos.
-    """
+    """Testa a criação de um cliente com valores válidos."""
     assert client.name == "Gabriel Sanches"
     assert client.cpf == "123.456.789-00"
     assert client.date_of_birth == date(1990, 1, 1)
 
 
 def test_age_calculation(client):
-    """
-        Testa o cálculo da idade do cliente.
-    """
+    """Testa o cálculo da idade do cliente."""
     today = date.today()
     birth = client.date_of_birth
 
@@ -37,8 +33,6 @@ def test_age_calculation(client):
     assert client.age == expected_age
 
 def test_invalid_date():
-    """
-        Testa a criação de um cliente com uma data inválida, esperando que uma exceção seja levantada.
-    """
+    """Testa a criação de um cliente com uma data inválida, esperando que uma exceção seja levantada."""
     with pytest.raises(ValueError):
         Client("Gabriel", "123", datetime.strptime("32/13/2000", "%d/%m/%Y").date())
