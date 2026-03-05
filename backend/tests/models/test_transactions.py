@@ -8,7 +8,6 @@ from datetime import datetime
 from decimal import Decimal
 from models import Transaction, TransactionType
 
-
 @pytest.mark.parametrize(
     "transaction_type, value, date",
     [
