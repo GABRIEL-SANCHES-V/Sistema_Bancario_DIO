@@ -4,4 +4,7 @@
 .envrc
 .env
 
+*.pyc
+__pycache__/
+
 teste.py
