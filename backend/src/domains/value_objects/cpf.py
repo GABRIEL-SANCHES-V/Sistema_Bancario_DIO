@@ -17,13 +17,6 @@ class CPF:
         - Valida comprimento e dígitos verificadores
         - Garante imutabilidade
         - Pode ser utilizado em sets e como chave de dicionário
-
-    Exemplo:
-        >>> cpf = CPF("123.456.789-09")
-        >>> print(cpf)
-        123.456.789-09
-        >>> cpf.value
-        '12345678909'
     """
 
     #Foi feito para limita os atributos para economizar memória e reforçar a imutabilidade
@@ -46,9 +39,16 @@ class CPF:
         return self._value
     
 
+    @property
     def formatted(self) -> str:
         cpf = self._value
         return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
+    
+    
+    @property
+    def masked(self) -> str:
+        cpf = self._value
+        return f"{cpf[:3]}.***.***-{cpf[9:]}"
     
 
     #---------------------------------------------------------------
@@ -58,7 +58,18 @@ class CPF:
     def _normalized_cpf(value: str) -> str:
         return _NON_DIGIT_RE.sub("", value)
     
-    
+
+    #---------------------------------------------------------------
+    # Validação: método público para verificar se um CPF é válido
+    #---------------------------------------------------------------
+    @classmethod
+    def is_valid(cls, value: str) -> bool:
+        try:
+            cls(value)
+            return True
+        except CPFError:
+            return False
+
     #---------------------------------------------------------------
     # Validação: regras específicas do CPF (tamanho, dígitos, etc)
     #---------------------------------------------------------------
@@ -99,10 +110,14 @@ class CPF:
     # Igualdade: compara o valor do CPF, não a identidade do objeto
     #---------------------------------------------------------------
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, CPF):
-            return NotImplemented
-        return self._value == other._value
-    
+        if isinstance(other, CPF):
+            return self._value == other._value
+
+        if isinstance(other, str):
+            return self._value == self._normalized_cpf(other)
+
+        return NotImplemented
+        
 
 
     #----------------------------------------------------
@@ -116,11 +131,11 @@ class CPF:
     # Representação: string formatada para exibição
     #----------------------------------------------------
     def __str__(self) -> str:
-        return self.formatted()
+        return self.formatted
     
 
     def __repr__(self) -> str:
-        return f"CPF('{self._value}')"
+        return f"CPF('{self.formatted}')"
     
 
     #----------------------------------------------------
