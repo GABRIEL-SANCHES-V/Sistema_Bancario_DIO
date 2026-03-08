@@ -1,4 +1,4 @@
-from ..domain_erros import DomainError
+from ..domain_errors import DomainError
 
 class CPFError(DomainError):
     """Classe base para erros relacionados ao CPF."""
@@ -18,3 +18,8 @@ class CPFRepeatedDigitsError(CPFError):
     """Erro para CPF com todos os dígitos iguais."""
     def __init__(self):
         super().__init__("CPF não pode ter todos os dígitos iguais.")
+
+class CPFInvalidTypeError(CPFError):
+    """Erro para CPF com tipo de dado inválido."""
+    def __init__(self, received_type: type):
+        super().__init__(f"CPF deve ser uma string, mas recebeu um valor do tipo {received_type.__name__}.")

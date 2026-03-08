@@ -1,6 +1,12 @@
 import re
 
-from domains.exceptions import *
+from domains.exceptions import (
+    CPFError,
+    CPFInvalidLengthError,
+    CPFInvalidCheckDigitsError,
+    CPFRepeatedDigitsError,
+    CPFInvalidTypeError,
+)
 
 #Regex fora da classe para evitar recompilação a cada instância criada, já que é imutável e pode ser reutilizada
 _NON_DIGIT_RE = re.compile(r"\D")
@@ -24,7 +30,7 @@ class CPF:
 
     def __init__(self, value: str) -> None:
         if not isinstance(value, str):
-            raise TypeError("CPF deve ser fornecido como string")
+            raise CPFInvalidTypeError(type(value))
         
         value_normalized = self._normalized_cpf(value)
         
@@ -142,4 +148,4 @@ class CPF:
     # Imutabilidade: impede alterações após criação
     #----------------------------------------------------
     def __setattr__(self, key: str, value: object) -> None:
-        raise AttributeError("CPF é um objeto imutável")
+        raise CPFError("CPF é um objeto imutável")

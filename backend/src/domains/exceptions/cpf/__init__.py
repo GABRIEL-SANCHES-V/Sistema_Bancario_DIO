@@ -3,6 +3,7 @@ from .cpf_errors import (
     CPFInvalidLengthError,
     CPFInvalidCheckDigitsError,
     CPFRepeatedDigitsError,
+    CPFInvalidTypeError,
 )
 
 __all__ = [
@@ -10,4 +11,5 @@ __all__ = [
     "CPFInvalidLengthError",
     "CPFInvalidCheckDigitsError",
     "CPFRepeatedDigitsError",
+    "CPFInvalidTypeError",
 ]
