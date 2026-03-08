@@ -22,9 +22,12 @@ class Email:
         if not isinstance(value, str):
             raise TypeError("Email deve ser fornecido como string")
 
-        validated = validate_email(value)
+        validated = validate_email(
+            value,
+            check_deliverability=False # Desabilita verificação de entregabilidade para evitar falhas em testes e ambientes sem acesso à internet
+        )
 
-        object.__setattr__(self, "_value", validated.email)
+        object.__setattr__(self, "_value", validated.normalized.lower())
 
     @property
     def value(self) -> str:

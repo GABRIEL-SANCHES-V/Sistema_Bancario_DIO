@@ -1,8 +1,8 @@
-import pytest
-from hypothesis import given, strategies as st
-
-from domains.value_objects.cpf import CPF
 from domains.exceptions.cpf.cpf_errors import *
+from hypothesis import given, strategies as st
+from domains.value_objects.cpf import CPF
+import pytest
+
 
 VALID_CPF = "52998224725"
 VALID_CPF_FORMATTED = "529.982.247-25"
