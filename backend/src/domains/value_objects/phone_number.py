@@ -49,6 +49,20 @@ VALID_DDDS = {"11", "12", "13", "14", "15", "16", "17", "18", "19",
                    "99"}
 
 class PhoneNumber:
+    """
+        Value Object para representar um número de celular válido.
+        Este Objeto encapsula a lógica de validação e formatação de um número de celular.
+        Ele é imutável após a criação, garantindo que o valor do número não possa ser alterado.
+
+        Características:
+        - Validação de comprimento (11 dígitos)
+        - Validação de DDD (códigos válidos)
+        - Validação do prefixo (deve começar com 9)
+        - Formatação automática
+        - Máscara para exibição segura
+        - Pode ser utilizado em sets e como chave de dicionário
+        - Garante imutabilidade após a criação
+    """
 
     __slots__ = ("_value",)
 

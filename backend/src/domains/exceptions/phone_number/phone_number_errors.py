@@ -1,13 +1,12 @@
-from domains.exceptions import domain_errors
+from ..domain_errors import DomainError
 
-class PhoneNumberError(domain_errors.DomainError):
+class PhoneNumberError(DomainError):
     """Classe base para exceções relacionadas a PhoneNumber."""
     pass
 
 
 class PhoneNumberInvalidLengthError(PhoneNumberError):
     """Exceção lançada quando o número de telefone não possui 11 dígitos."""
-
     def __init__(self, length: int) -> None:
         self.length = length
         super().__init__(f"Número de telefone deve conter 11 dígitos (DDD + número). Recebido: {length}")
