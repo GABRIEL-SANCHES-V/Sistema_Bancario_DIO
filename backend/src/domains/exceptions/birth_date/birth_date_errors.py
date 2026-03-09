@@ -27,4 +27,10 @@ class BirthDateInvalidFormatError(BirthDateError):
         self.value = value
         super().__init__(f"Formato de Data de Nascimento inválido: '{value}'. Formatos aceitos: 'YYYY-MM-DD' ou 'DD/MM/YYYY'.")
 
+class BirthDateInvalidValueError(BirthDateError):
+    """Exceção para valor inválido de data de nascimento."""
+    def __init__(self, value: str) -> None:
+        self.value = value
+        super().__init__(f"Valor de Data de Nascimento inválido: '{value}'. Verifique se a data é válida.")
+
     

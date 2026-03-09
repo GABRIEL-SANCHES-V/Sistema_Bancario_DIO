@@ -4,6 +4,7 @@ from .birth_date_errors import (
     BirthDateTooOldError,
     BirthDateInvalidTypeError,
     BirthDateInvalidFormatError,
+    BirthDateInvalidValueError,
 )
 
 
@@ -13,4 +14,5 @@ __all__ = [
     "BirthDateTooOldError",
     "BirthDateInvalidTypeError",
     "BirthDateInvalidFormatError",
+    "BirthDateInvalidValueError",
 ]

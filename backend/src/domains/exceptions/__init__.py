@@ -44,4 +44,5 @@ __all__ = [
     "BirthDateTooOldError",
     "BirthDateInvalidTypeError",
     "BirthDateInvalidFormatError",
+    "BirthDateInvalidValueError",
 ]

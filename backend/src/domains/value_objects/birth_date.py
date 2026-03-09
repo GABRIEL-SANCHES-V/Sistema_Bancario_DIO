@@ -4,6 +4,7 @@ from domains.exceptions import (
     BirthDateTooOldError,
     BirthDateInvalidTypeError,
     BirthDateInvalidFormatError,
+    BirthDateInvalidValueError,
 )
 from datetime import date
 import re
@@ -84,14 +85,22 @@ class BirthDate:
     #---------------------------------------------------------------
     @staticmethod
     def _normalize_date_string(value: str) -> date:
+
         if _RE_DATE_ISO.match(value):
-            return date.fromisoformat(value)
+            try:
+                return date.fromisoformat(value)
+            except ValueError:
+                raise BirthDateInvalidValueError(value)
+
         elif _RE_DATE_BR.match(value):
             day, month, year = value.split("/")
-            return date(int(year), int(month), int(day))
+            try:
+                return date(int(year), int(month), int(day))
+            except ValueError:
+                raise BirthDateInvalidValueError(value)
+
         else:
             raise BirthDateInvalidFormatError(value)
-
 
     #---------------------------------------------------------------
     # Validação: Metodo privado para verificar se a data de nascimento é válida (não futura, não muito antiga)

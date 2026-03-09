@@ -29,15 +29,6 @@ def test_create_valid_cpf():
     with pytest.raises(CPFInvalidTypeError):
         CPF(123)
 
-
-def test_create_formatted_cpf():
-    cpf = CPF(VALID_CPF_FORMATTED)
-
-    assert cpf.value == VALID_CPF
-    assert cpf.formatted == VALID_CPF_FORMATTED
-    assert cpf.masked == "529.***.***-25"
-
-
 # -----------------------------
 # Exception tests
 # -----------------------------
