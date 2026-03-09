@@ -15,6 +15,12 @@ from .cpf import *
 #---------------------------------------------------------------
 from .phone_number import *
 
+
+#---------------------------------------------------------------
+# Exceções relacionadas a BirthDate
+#---------------------------------------------------------------
+from .birth_date import *
+
 #---------------------------------------------------------------
 # Exportação de todas as exceções para facilitar importação em outros módulos
 #---------------------------------------------------------------
@@ -32,4 +38,10 @@ __all__ = [
     "PhoneNumberInvalidTypeError",
     "PhoneNumberMissingDigitError",
     "PhoneNumberInvalidDDDError",
+
+    "BirthDateError",
+    "BirthDateInFutureError",
+    "BirthDateTooOldError",
+    "BirthDateInvalidTypeError",
+    "BirthDateInvalidFormatError",
 ]
