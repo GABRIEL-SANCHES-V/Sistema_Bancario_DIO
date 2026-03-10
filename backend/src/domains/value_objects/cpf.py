@@ -148,4 +148,6 @@ class CPF:
     # Imutabilidade: impede alterações após criação
     #----------------------------------------------------
     def __setattr__(self, key: str, value: object) -> None:
-        raise CPFError("CPF é um objeto imutável")
+        if hasattr(self, "_value"):
+            raise CPFError("CPF é um objeto imutável.")
+        super().__setattr__(key, value)

@@ -167,4 +167,6 @@ class PhoneNumber:
     # Imutabilidade: impede alterações após criação
     #---------------------------------------------------------------
     def __setattr__(self, key, value):
-        raise PhoneNumberError("PhoneNumber é um objeto imutável e não pode ser modificado após a criação.")
+        if hasattr(self, "_value"):
+            raise PhoneNumberError("PhoneNumber é um objeto imutável, e não pode ser modificado após a criação.")
+        super().__setattr__(key, value)

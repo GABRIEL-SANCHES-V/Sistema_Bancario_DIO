@@ -91,4 +91,6 @@ class Email:
     # Imutabilidade: impede alterações após criação
     #----------------------------------------------------
     def __setattr__(self, key, value):
-        raise AttributeError("Email é um objeto imutável")
+        if hasattr(self, "_value"):
+            raise AttributeError("Email é um objeto imutável.")
+        super().__setattr__(key, value)

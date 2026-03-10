@@ -148,4 +148,6 @@ class BirthDate:
     # Imutabilidade: bloqueia a modificação do valor após a criação
     #---------------------------------------------------------------
     def __setattr__(self, key, value) -> None:
-        raise BirthDateError("BirthDate é um objeto imutável e não pode ser modificado após a criação.")
+        if hasattr(self, "_value"):
+            raise BirthDateError("BirthDate é um objeto imutável, não pode ser modificado.")
+        super().__setattr__(key, value)
