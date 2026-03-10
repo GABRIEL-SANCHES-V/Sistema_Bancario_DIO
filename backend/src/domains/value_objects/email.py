@@ -1,4 +1,8 @@
 from email_validator import validate_email, EmailNotValidError
+from domains.exceptions.email import (
+    EmailError,
+    EmailInvalidTypeError,
+)
 
 
 class Email:
@@ -20,7 +24,7 @@ class Email:
     def __init__(self, value: str) -> None:
 
         if not isinstance(value, str):
-            raise TypeError("Email deve ser fornecido como string")
+            raise EmailInvalidTypeError(type(value).__name__)
 
         validated = validate_email(
             value,
@@ -92,5 +96,5 @@ class Email:
     #----------------------------------------------------
     def __setattr__(self, key, value):
         if hasattr(self, "_value"):
-            raise AttributeError("Email é um objeto imutável.")
+            raise EmailError("Email é um objeto imutável.")
         super().__setattr__(key, value)

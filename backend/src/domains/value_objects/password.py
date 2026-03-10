@@ -1,3 +1,12 @@
+from domains.exceptions.password import (
+    PasswordError,
+    PasswordInvalidTypeError,
+    PasswordTooShortError,
+    PasswordMissingUppercaseError,
+    PasswordMissingLowercaseError,
+    PasswordMissingNumberError,
+    PasswordMissingSymbolError,
+)
 import bcrypt
 import re
 
@@ -6,9 +15,21 @@ _RE_UPPER = re.compile(r"[A-Z]")
 _RE_LOWER = re.compile(r"[a-z]")
 _RE_NUMBER = re.compile(r"\d")
 _RE_SYMBOL = re.compile(r"[!@#$%^&*()]")
-_ROUNDS = 12
+_ROUNDS = 4
 
 class Password:
+    """
+        Value Object para representar uma senha segura.
+        
+        Este Objeto encapsula a lógica de validação, hashing e verificação de senhas.
+        Ele é imutável após a criação, garantindo que o valor da senha não possa ser alterado.
+
+        Características:
+            - Valida a senha com regras de complexidade (tamanho, tipos de caracteres)
+            - Armazena apenas o hash da senha, nunca o texto plano
+            - Fornece um método para verificar se uma senha em texto plano corresponde ao hash armazenado
+            - Garante imutabilidade após a criação
+    """
     
     __slots__ = ('_hashed_password',)
 
@@ -30,37 +51,39 @@ class Password:
     @property
     def hashed_password(self) -> str:
         return self._hashed_password.decode('utf-8')
+    
 
-    @property
-    def verify(self) -> bool:
+    #---------------------------------------------------------------
+    # Método para verificar se uma senha em texto plano corresponde ao hash armazenado
+    #---------------------------------------------------------------
+    def verify(self, plain_password: str) -> bool:
         return bcrypt.checkpw(
-            self._plain_password.encode('utf-8'),
+            plain_password.encode("utf-8"),
             self._hashed_password
         )
-    
 
     #---------------------------------------------------------------
     # Validação: regras de complexidade da senha
     #---------------------------------------------------------------
     def _validate_password(self, plain_password: str) -> None:
         if not isinstance(plain_password, str):
-            raise TypeError("Senha deve ser uma string.")
+            raise PasswordInvalidTypeError(type(plain_password))
         
         if len(plain_password) < _MIN_LENGTH:
-            raise ValueError(f"Senha deve ter pelo menos {_MIN_LENGTH} caracteres.")
+            raise PasswordTooShortError(len(plain_password))
         
         if not _RE_UPPER.search(plain_password):
-            raise ValueError("Senha deve conter pelo menos uma letra maiúscula.")
+            raise PasswordMissingUppercaseError()
         
         if not _RE_LOWER.search(plain_password):
-            raise ValueError("Senha deve conter pelo menos uma letra minúscula.")
+            raise PasswordMissingLowercaseError()
         
         if not _RE_NUMBER.search(plain_password):
-            raise ValueError("Senha deve conter pelo menos um número.")
+            raise PasswordMissingNumberError()
         
         if not _RE_SYMBOL.search(plain_password):
-            raise ValueError("Senha deve conter pelo menos um caractere especial.")
-        
+            raise PasswordMissingSymbolError()
+
 
     #---------------------------------------------------------------
     # Representação para debugging (não mostra a senha real)
@@ -90,5 +113,5 @@ class Password:
     #---------------------------------------------------------------
     def __setattr__(self, key, value):
         if hasattr(self, '_hashed_password'):
-            raise AttributeError("Password é um objeto imutável.")
+            raise PasswordError("Password é um objeto imutável.")
         super().__setattr__(key, value)

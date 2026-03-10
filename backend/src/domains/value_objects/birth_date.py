@@ -13,6 +13,19 @@ _RE_DATE_ISO = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _RE_DATE_BR = re.compile(r"^\d{2}/\d{2}/\d{4}$")
 
 class BirthDate:
+    """
+        Value Object para representar uma data de nascimento válida.
+        
+        Este Objeto encapsula a lógica de validação e formatação de uma data de nascimento.
+        Ele é imutável após a criação, garantindo que o valor da data não possa ser alterado.
+
+        Características:
+            - Valida o formato da data (ISO ou BR)
+            - Valida se a data não é futura e não é muito antiga
+            - Fornece propriedades para acessar ano, mês, dia e idade
+            - Pode ser utilizado em sets e como chave de dicionário
+            - Garante imutabilidade após a criação
+    """
 
     __slots__ = ("_value",)
 

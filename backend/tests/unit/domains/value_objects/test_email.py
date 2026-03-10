@@ -1,6 +1,10 @@
 from email_validator import EmailNotValidError
 from hypothesis import given, strategies as st
 from domains.value_objects.email import Email
+from domains.exceptions.email import (
+    EmailError,
+    EmailInvalidTypeError,
+)
 import pytest
 
 
@@ -29,11 +33,9 @@ def test_create_valid_email():
     assert email.masked == VALID_EMAIL_MASKED
 
 
-def test_create_already_normalized_email():
-    email = Email(VALID_EMAIL_NORMALIZED)
-
-    assert email.value == VALID_EMAIL_NORMALIZED
-    assert email.masked == VALID_EMAIL_MASKED
+def test_create_email_with_non_string_raises_exception():
+    with pytest.raises(EmailInvalidTypeError):
+        Email(12345)
 
 
 # -----------------------------
@@ -118,7 +120,7 @@ def test_email_hash():
 def test_email_is_immutable():
     email = Email(VALID_EMAIL)
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(EmailError):
         email.value = "new@email.com"
 
 

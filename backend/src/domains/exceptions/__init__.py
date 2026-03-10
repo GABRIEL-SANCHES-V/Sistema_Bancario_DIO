@@ -21,6 +21,19 @@ from .phone_number import *
 #---------------------------------------------------------------
 from .birth_date import *
 
+
+#---------------------------------------------------------------
+# Exceções relacionadas a Password
+#---------------------------------------------------------------
+from .password import *
+
+
+#---------------------------------------------------------------
+# Exceções relacionadas a Email
+#---------------------------------------------------------------
+from .email import *
+
+
 #---------------------------------------------------------------
 # Exportação de todas as exceções para facilitar importação em outros módulos
 #---------------------------------------------------------------
@@ -45,4 +58,17 @@ __all__ = [
     "BirthDateInvalidTypeError",
     "BirthDateInvalidFormatError",
     "BirthDateInvalidValueError",
+    
+    "PasswordError",
+    "PasswordInvalidTypeError",
+    "PasswordTooShortError",
+    "PasswordMissingUppercaseError",
+    "PasswordMissingLowercaseError",
+    "PasswordMissingNumberError",
+    "PasswordMissingSymbolError",
+
+    "EmailError",
+    "EmailInvalidTypeError",
+
+
 ]
