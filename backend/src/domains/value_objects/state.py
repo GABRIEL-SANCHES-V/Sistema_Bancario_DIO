@@ -37,6 +37,18 @@ DICT_STATES = {
 DICT_UF = {uf: state for state, uf in DICT_STATES.items()}
 
 class State:
+    """
+        Value Object para representar um estado brasileiro válido.
+
+        Este Objeto encapsula a lógica de validação e formatação de um estado brasileiro.
+        Ele é imutável após a criação, garantindo que o valor do estado não possa ser alterado.
+
+        Características:
+            - Validação de estado e UF
+            - Fornece uma representação formatada para exibição
+            - Pode ser utilizado em sets e como chave de dicionário
+            - Garante imutabilidade após a criação
+    """
 
     __slots__ = ("_state",)
 

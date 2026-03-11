@@ -10,7 +10,6 @@ from domains.exceptions import (
 import pytest
 
 
-
 # -------------------------------------
 # Creation tests
 # -------------------------------------
@@ -32,6 +31,24 @@ def test_create_valid_state_from_uf():
 def test_create_state_with_invalid_type():
     with pytest.raises(StateInvalidTypeError):
         State(123)
+
+
+# -------------------------------------
+# Normalization tests
+# -------------------------------------
+
+def test_state_normalization():
+    state = State("  são paulo  ")
+
+    assert state.state == "São Paulo"
+    assert state.uf == "SP"
+
+
+def test_state_accepts_lowercase_uf():
+    state = State("sp")
+
+    assert state.state == "São Paulo"
+    assert state.uf == "SP"
 
 
 # -------------------------------------
@@ -94,6 +111,16 @@ def test_state_equality():
     assert state1 == state2
     assert state1 != state3
 
+def test_state_set_behavior():
+
+    states = {
+        State("SP"),
+        State("São Paulo"),
+        State("Rio de Janeiro"),
+    }
+
+    assert len(states) == 2
+
 
 # -------------------------------------
 # Hash tests
@@ -107,6 +134,15 @@ def test_state_hash():
     assert hash(state1) == hash(state2)
     assert hash(state1) != hash(state3)
 
+def test_state_as_dict_key():
+
+    d = {
+        State("SP"): "São Paulo",
+        State("RJ"): "Rio de Janeiro",
+    }
+
+    assert d[State("São Paulo")] == "São Paulo"
+
 
 # -------------------------------------
 # Representation tests
@@ -119,6 +155,7 @@ def test_state_representation():
     assert repr_str == "State('SP')"
     assert str(state) == "São Paulo (SP)"
     assert state.formatted == "São Paulo (SP)"
+
 
 # -------------------------------------
 # Immutability tests
