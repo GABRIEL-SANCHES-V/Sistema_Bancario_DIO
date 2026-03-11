@@ -41,6 +41,12 @@ from .state import *
 
 
 #---------------------------------------------------------------
+# Exceções relacionadas a ZipCode
+#---------------------------------------------------------------
+from .zip_code.zip_code_errors import *
+
+
+#---------------------------------------------------------------
 # Exportação de todas as exceções para facilitar importação em outros módulos
 #---------------------------------------------------------------
 __all__ = [
@@ -79,5 +85,9 @@ __all__ = [
     "StateError",
     "StateInvalidTypeError",
     "StateInvalidError",
+
+    "ZipCodeError",
+    "ZipCodeInvalidTypeError",
+    "ZipCodeInvalidFormatError",
 
 ]
