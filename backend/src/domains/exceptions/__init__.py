@@ -35,6 +35,12 @@ from .email import *
 
 
 #---------------------------------------------------------------
+# Exceções relacionadas a State
+#---------------------------------------------------------------
+from .state import *
+
+
+#---------------------------------------------------------------
 # Exportação de todas as exceções para facilitar importação em outros módulos
 #---------------------------------------------------------------
 __all__ = [
@@ -70,5 +76,8 @@ __all__ = [
     "EmailError",
     "EmailInvalidTypeError",
 
+    "StateError",
+    "StateInvalidTypeError",
+    "StateInvalidError",
 
 ]
