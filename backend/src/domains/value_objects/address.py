@@ -12,6 +12,17 @@ from domains.exceptions import (
 
 
 class Address:
+    """
+        Value Object que representa um endereço, composto por rua, número, complemento, bairro, cidade, estado, CEP e país.
+
+        O endereço é imutável e possui validações para garantir a integridade dos dados. Ele também possui um método de formatação para exibir o endereço de forma legível.
+
+        Características:
+        - Imutável: uma vez criado, o endereço não pode ser alterado.
+        - Validações: o construtor valida os tipos e valores dos campos, garantindo que o endereço seja sempre válido.
+        - Formatação: o método `formatted` retorna uma string formatada do endereço, facilitando a exibição em interfaces de usuário ou relatórios.
+        - Uso em sets e como chave de dicionário: o método `__hash__` permite que o endereço seja usado em sets e como chave de dicionário, garantindo que endereços iguais sejam tratados como iguais.
+    """
 
     __slots__ = (
         "_street",

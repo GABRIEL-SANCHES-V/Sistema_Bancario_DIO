@@ -53,6 +53,12 @@ from .address.address_errors import *
 
 
 #---------------------------------------------------------------
+# Exceções relacionadas a Name
+#---------------------------------------------------------------
+from .name import *
+
+
+#---------------------------------------------------------------
 # Exportação de todas as exceções
 #---------------------------------------------------------------
 __all__ = [
@@ -102,4 +108,9 @@ __all__ = [
     "AddressInvalidTypeError",
     "AddressInvalidValueError",
 
+    "NameErrorVO",
+    "NameInvalidTypeError",
+    "NameTooShortError",
+    "NameTooLongError",
+    "NameInvalidFormatError",
 ]
