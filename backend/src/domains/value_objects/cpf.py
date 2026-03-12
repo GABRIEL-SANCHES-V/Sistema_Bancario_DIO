@@ -1,6 +1,12 @@
 import re
 
-from domains.exceptions import *
+from domains.exceptions import (
+    CPFError,
+    CPFInvalidLengthError,
+    CPFInvalidCheckDigitsError,
+    CPFRepeatedDigitsError,
+    CPFInvalidTypeError,
+)
 
 #Regex fora da classe para evitar recompilação a cada instância criada, já que é imutável e pode ser reutilizada
 _NON_DIGIT_RE = re.compile(r"\D")
@@ -24,7 +30,7 @@ class CPF:
 
     def __init__(self, value: str) -> None:
         if not isinstance(value, str):
-            raise TypeError("CPF deve ser fornecido como string")
+            raise CPFInvalidTypeError(type(value))
         
         value_normalized = self._normalized_cpf(value)
         
@@ -54,6 +60,7 @@ class CPF:
     #---------------------------------------------------------------
     # Normalização: remove caracteres não numéricos para validação
     #---------------------------------------------------------------
+
     @staticmethod
     def _normalized_cpf(value: str) -> str:
         return _NON_DIGIT_RE.sub("", value)
@@ -62,6 +69,7 @@ class CPF:
     #---------------------------------------------------------------
     # Validação: método público para verificar se um CPF é válido
     #---------------------------------------------------------------
+
     @classmethod
     def is_valid(cls, value: str) -> bool:
         try:
@@ -73,6 +81,7 @@ class CPF:
     #---------------------------------------------------------------
     # Validação: regras específicas do CPF (tamanho, dígitos, etc)
     #---------------------------------------------------------------
+
     @classmethod
     def _validate_cpf(cls, cpf: str) -> None:
         if len(cpf) != 11:
@@ -109,6 +118,7 @@ class CPF:
     #---------------------------------------------------------------
     # Igualdade: compara o valor do CPF, não a identidade do objeto
     #---------------------------------------------------------------
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CPF):
             return self._value == other._value
@@ -123,6 +133,7 @@ class CPF:
     #----------------------------------------------------
     # Hash: permite uso em sets e como chave de dicionário
     #----------------------------------------------------
+
     def __hash__(self) -> int:
         return hash(self._value)
     
@@ -130,6 +141,7 @@ class CPF:
     #----------------------------------------------------
     # Representação: string formatada para exibição
     #----------------------------------------------------
+
     def __str__(self) -> str:
         return self.formatted
     
@@ -141,5 +153,8 @@ class CPF:
     #----------------------------------------------------
     # Imutabilidade: impede alterações após criação
     #----------------------------------------------------
+    
     def __setattr__(self, key: str, value: object) -> None:
-        raise AttributeError("CPF é um objeto imutável")
+        if hasattr(self, "_value"):
+            raise CPFError("CPF é um objeto imutável.")
+        super().__setattr__(key, value)

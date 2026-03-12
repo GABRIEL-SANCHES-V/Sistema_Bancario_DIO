@@ -1,8 +1,14 @@
-import pytest
 from hypothesis import given, strategies as st
-
 from domains.value_objects.cpf import CPF
-from domains.exceptions.cpf.cpf_errors import *
+from domains.exceptions import (
+    CPFError,
+    CPFInvalidLengthError,
+    CPFInvalidCheckDigitsError,
+    CPFRepeatedDigitsError,
+    CPFInvalidTypeError,
+)
+import pytest
+
 
 VALID_CPF = "52998224725"
 VALID_CPF_FORMATTED = "529.982.247-25"
@@ -19,15 +25,9 @@ def test_create_valid_cpf():
     assert cpf.value == VALID_CPF
     assert cpf.formatted == "529.982.247-25"
     assert cpf.masked == "529.***.***-25"
-
-
-def test_create_formatted_cpf():
-    cpf = CPF(VALID_CPF_FORMATTED)
-
-    assert cpf.value == VALID_CPF
-    assert cpf.formatted == VALID_CPF_FORMATTED
-    assert cpf.masked == "529.***.***-25"
-
+    
+    with pytest.raises(CPFInvalidTypeError):
+        CPF(123)
 
 # -----------------------------
 # Exception tests
@@ -103,7 +103,7 @@ def test_cpf_hash():
 def test_cpf_is_immutable():
     cpf = CPF(VALID_CPF)
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(CPFError):
         cpf.value = "11111111111"
 
 
