@@ -9,6 +9,18 @@ _RE_ZIP_CODE = re.compile(r"\D")
 
 
 class ZipCode:
+    """
+        Representa um CEP (Código de Endereçamento Postal) brasileiro.
+        
+        O CEP é composto por 8 dígitos numéricos, podendo ser formatado com ou sem hífen (ex: "12345-678" ou "12345678"). Esta classe é responsável por validar, normalizar e representar o CEP de forma consistente em todo o sistema.
+
+        Características:
+            - Imutável
+            - Validação de formato
+            - Normalização de entrada
+            - Uso em sets e como chave de dicionário
+            - Fornece uma representação formatada para exibição
+    """
 
     __slots__ = ("_value",)
 

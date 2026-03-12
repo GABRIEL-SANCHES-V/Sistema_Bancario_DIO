@@ -47,7 +47,13 @@ from .zip_code.zip_code_errors import *
 
 
 #---------------------------------------------------------------
-# Exportação de todas as exceções para facilitar importação em outros módulos
+# Exceções relacionadas a Address
+#---------------------------------------------------------------
+from .address.address_errors import *
+
+
+#---------------------------------------------------------------
+# Exportação de todas as exceções
 #---------------------------------------------------------------
 __all__ = [
     "DomainError",
@@ -89,5 +95,11 @@ __all__ = [
     "ZipCodeError",
     "ZipCodeInvalidTypeError",
     "ZipCodeInvalidFormatError",
+
+    "AddressError",
+    "AddressInvalidTypeStateError",
+    "AddressInvalidTypeZipCodeError",
+    "AddressInvalidTypeError",
+    "AddressInvalidValueError",
 
 ]

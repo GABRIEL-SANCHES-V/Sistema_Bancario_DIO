@@ -1,38 +1,14 @@
-import re
-
-
-_RE_ZIP_CODE = re.compile(r"\D")
-
-
-DICT_UF = {
-    "AC": "Acre",
-    "AL": "Alagoas",
-    "AP": "Amapá",
-    "AM": "Amazonas",
-    "BA": "Bahia",
-    "CE": "Ceará",
-    "DF": "Distrito Federal",
-    "ES": "Espírito Santo",
-    "GO": "Goiás",
-    "MA": "Maranhão",
-    "MT": "Mato Grosso",
-    "MS": "Mato Grosso do Sul",
-    "MG": "Minas Gerais",
-    "PA": "Pará",
-    "PB": "Paraíba",
-    "PR": "Paraná",
-    "PE": "Pernambuco",
-    "PI": "Piauí",
-    "RJ": "Rio de Janeiro",
-    "RN": "Rio Grande do Norte",
-    "RS": "Rio Grande do Sul",
-    "RO": "Rondônia",
-    "RR": "Roraima",
-    "SC": "Santa Catarina",
-    "SP": "São Paulo",
-    "SE": "Sergipe",
-    "TO": "Tocantins",
-}
+from domains.value_objects.zip_code import ZipCode
+from domains.value_objects.state import State
+from domains.exceptions import (
+    AddressError,
+    AddressInvalidTypeStateError,
+    AddressInvalidTypeZipCodeError,
+    AddressInvalidTypeError,
+    AddressInvalidValueError,
+    StateError,
+    ZipCodeError,
+)
 
 
 class Address:
@@ -54,28 +30,30 @@ class Address:
         number: str,
         neighborhood: str,
         city: str,
-        state: str,
-        zip_code: str,
+        state: State,
+        zip_code: ZipCode,
         country: str = "Brasil",
         complement: str | None = None,
     ):
 
-        street = self._normalize_string(street)
-        number = number.strip()
-        neighborhood = self._normalize_string(neighborhood)
-        city = self._normalize_string(city)
-        state = state.strip().upper()
-        zip_code = self._normalize_zip_code(zip_code)
-        country = self._normalize_string(country)
-        complement = self._normalize_string(complement) if complement else None
+        if not isinstance(state, State):
+            raise AddressInvalidTypeStateError(type(state), State)
+
+        if not isinstance(zip_code, ZipCode):
+            raise AddressInvalidTypeZipCodeError(type(zip_code), ZipCode)
+
+        street = self._normalize_string(street, "street")
+        number = number.strip() if isinstance(number, str) else str(number)
+        neighborhood = self._normalize_string(neighborhood, "neighborhood")
+        city = self._normalize_string(city, "city")
+        country = self._normalize_string(country, "country")
+        complement = self._normalize_string(complement, "complement") if complement else None
 
         self._validate_required_fields(
             street,
             number,
             neighborhood,
             city,
-            state,
-            zip_code,
             country,
         )
 
@@ -89,7 +67,7 @@ class Address:
         object.__setattr__(self, "_country", country)
 
     # ---------------------------------------------------------------
-    # Propriedades (imutáveis)
+    # Propriedades
     # ---------------------------------------------------------------
 
     @property
@@ -113,16 +91,20 @@ class Address:
         return self._city
 
     @property
-    def state(self) -> str:
+    def state(self) -> State:
         return self._state
 
     @property
-    def zip_code(self) -> str:
+    def state_formatted(self) -> str:
+        return self._state.formatted
+
+    @property
+    def zip_code(self) -> ZipCode:
         return self._zip_code
-    
+
     @property
     def zip_code_formatted(self) -> str:
-        return f"{self._zip_code[:5]}-{self._zip_code[5:]}"
+        return self._zip_code.formatted
 
     @property
     def country(self) -> str:
@@ -134,14 +116,13 @@ class Address:
 
         return (
             f"{self.street}, {self.number}{comp} - {self.neighborhood}\n"
-            f"{self.city} - {self.state} - {self.country}\n"
+            f"{self.city} - {self.state_formatted} - {self.country}\n"
             f"{self.zip_code_formatted}"
         )
-            
 
-    # ----------------------------------------------------------------
-    # Validação: método público para verificar se um endereço é válido
-    # ----------------------------------------------------------------
+    # ---------------------------------------------------------------
+    # Validação pública
+    # ---------------------------------------------------------------
 
     @classmethod
     def is_valid(
@@ -150,11 +131,11 @@ class Address:
         number: str,
         neighborhood: str,
         city: str,
-        state: str,
-        zip_code: str,
+        state: State,
+        zip_code: ZipCode,
         country: str = "Brasil",
     ) -> bool:
-        
+
         try:
             cls(
                 street,
@@ -166,29 +147,20 @@ class Address:
                 country,
             )
             return True
-        except ValueError:
+        except (AddressError, StateError, ZipCodeError):
             return False
-
 
     # ---------------------------------------------------------------
     # Normalização
     # ---------------------------------------------------------------
 
     @staticmethod
-    def _normalize_string(value: str) -> str:
+    def _normalize_string(value: str, field_name: str) -> str:
+
         if not isinstance(value, str):
-            ValueError("Valor deve ser uma string")
+            raise AddressInvalidTypeError(field_name, type(value), str)
+
         return value.strip().title()
-
-    @staticmethod
-    def _normalize_zip_code(value: str) -> str:
-        zip_code = _RE_ZIP_CODE.sub("", value)
-
-        if len(zip_code) != 8:
-            raise ValueError("CEP inválido")
-
-        return zip_code
-
 
     # ---------------------------------------------------------------
     # Validação de campos obrigatórios
@@ -196,96 +168,90 @@ class Address:
 
     @staticmethod
     def _validate_required_fields(
-        street,
-        number,
-        neighborhood,
-        city,
-        state,
-        zip_code,
-        country,
+        street: str,
+        number: str,
+        neighborhood: str,
+        city: str,
+        country: str,
     ):
+
         if not street:
-            raise ValueError("Rua é obrigatória")
+            raise AddressInvalidValueError("street", street)
 
         if not number:
-            raise ValueError("Número é obrigatório")
+            raise AddressInvalidValueError("number", number)
 
         if not neighborhood:
-            raise ValueError("Bairro é obrigatório")
+            raise AddressInvalidValueError("neighborhood", neighborhood)
 
         if not city:
-            raise ValueError("Cidade é obrigatória")
-
-        if not state:
-            raise ValueError("Estado é obrigatório")
-
-        if not zip_code:
-            raise ValueError("CEP é obrigatório")
+            raise AddressInvalidValueError("city", city)
 
         if not country:
-            raise ValueError("País é obrigatório")
-        
+            raise AddressInvalidValueError("country", country)
 
     # ---------------------------------------------------------------
-    # Igualdade: comparação baseada no valor dos campos
+    # Igualdade
     # ---------------------------------------------------------------
 
     def __eq__(self, other) -> bool:
-        if isinstance(other, Address):
-            return (
-                self._street == other._street and
-                self._number == other._number and
-                self._complement == other._complement and
-                self._neighborhood == other._neighborhood and
-                self._city == other._city and
-                self._state == other._state and
-                self._zip_code == other._zip_code and
-                self._country == other._country
-            )
-    
-        return NotImplemented
 
+        if not isinstance(other, Address):
+            return NotImplemented
+
+        return (
+            self._street == other._street
+            and self._number == other._number
+            and self._complement == other._complement
+            and self._neighborhood == other._neighborhood
+            and self._city == other._city
+            and self._state == other._state
+            and self._zip_code == other._zip_code
+            and self._country == other._country
+        )
 
     # ---------------------------------------------------------------
-    # Hash: permite uso em sets e como chave de dicionário
+    # Hash
     # ---------------------------------------------------------------
 
     def __hash__(self) -> int:
-        return hash((
-            self.street,
-            self.number,
-            self.complement,
-            self.neighborhood,
-            self.city,
-            self.state,
-            self.zip_code,
-            self.country
-        ))
 
-    
+        return hash(
+            (
+                self._street,
+                self._number,
+                self._complement,
+                self._neighborhood,
+                self._city,
+                self._state,
+                self._zip_code,
+                self._country,
+            )
+        )
+
     # ---------------------------------------------------------------
-    # Representação: string formatada para exibição
+    # Representação
     # ---------------------------------------------------------------
 
     def __str__(self) -> str:
         return self.formatted
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
-            f"Address(street={self.street!r}, "
+            f"Address("
+            f"street={self.street!r}, "
             f"number={self.number!r}, "
             f"complement={self.complement!r}, "
             f"neighborhood={self.neighborhood!r}, "
             f"city={self.city!r}, "
-            f"state={self.state!r})"
+            f"state={self.state!r}, "
             f"zip_code={self.zip_code!r}, "
             f"country={self.country!r})"
         )
 
-
     # ---------------------------------------------------------------
-    # Imutabilidade: não expõe setters
+    # Imutabilidade
     # ---------------------------------------------------------------
 
     def __setattr__(self, key, value):
-        raise AttributeError("Address é imutável")
+        raise AddressError("Address é imutável")
