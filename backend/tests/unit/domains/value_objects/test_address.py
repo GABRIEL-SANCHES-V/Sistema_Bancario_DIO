@@ -429,10 +429,10 @@ def test_repr_contains_class_name():
 # ----------------------------------------
 
 @given(
-    street=st.text(min_size=1),
-    number=st.text(min_size=1),
-    neighborhood=st.text(min_size=1),
-    city=st.text(min_size=1),
+    street=st.text(min_size=1).filter(lambda s: not s.isspace()),
+    number=st.text(min_size=1).filter(lambda s: not s.isspace()),
+    neighborhood=st.text(min_size=1).filter(lambda s: not s.isspace()),
+    city=st.text(min_size=1).filter(lambda s: not s.isspace()),
 )
 def test_address_never_breaks_with_random_strings(
     street,

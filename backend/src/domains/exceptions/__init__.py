@@ -59,6 +59,12 @@ from .name import *
 
 
 #---------------------------------------------------------------
+# Exceções relacionadas a Money
+#---------------------------------------------------------------
+from .money import *
+
+
+#---------------------------------------------------------------
 # Exportação de todas as exceções
 #---------------------------------------------------------------
 __all__ = [
@@ -113,4 +119,8 @@ __all__ = [
     "NameTooShortError",
     "NameTooLongError",
     "NameInvalidFormatError",
+    
+    "MoneyError",
+    "MoneyInvalidTypeError",
+    "MoneyInvalidValueError",
 ]
