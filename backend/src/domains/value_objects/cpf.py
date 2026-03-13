@@ -123,7 +123,7 @@ class CPF:
         
 
     #----------------------------------------------------
-    # Representação: string formatada para exibição
+    # Representação
     #----------------------------------------------------
 
     def __str__(self) -> str:
@@ -143,7 +143,7 @@ class CPF:
     
 
     #----------------------------------------------------
-    # Imutabilidade: impede alterações após criação
+    # Imutabilidade
     #----------------------------------------------------
     
     def __setattr__(self, key: str, value: object) -> None:
