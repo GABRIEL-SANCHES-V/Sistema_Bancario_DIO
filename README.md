@@ -75,7 +75,7 @@ Regras completas:
 * Arquitetura → `docs/architecture.md`
 * Domain Driven Design → `docs/ddd.md`
 * Value Objects → `src/domain/value_objects/README.md`
-* Test Strategy → `docs/test_strategy.md`
+* Test Strategy → `tests/unit/domains/value_objects/README.md`
 * ADR → `docs/adr/`
 
 ---
