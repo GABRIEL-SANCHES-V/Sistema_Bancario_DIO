@@ -115,7 +115,7 @@ class Password:
     
 
     #---------------------------------------------------------------
-    # Imutabilidade: não permite alterar o hash depois de criado
+    # Imutabilidade
     #---------------------------------------------------------------
     def __setattr__(self, key, value):
         raise PasswordError("Password é um objeto imutável. Não é possível alterar o valor depois de criado.")

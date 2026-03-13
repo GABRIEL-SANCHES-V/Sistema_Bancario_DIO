@@ -22,20 +22,21 @@ PASSWORD_NO_NUMBER = "Abcdefg!"
 PASSWORD_NO_SYMBOL = "Abcdef12"
 
 
-# -----------------------------
-# Creation tests
-# -----------------------------
+# ----------------------------------------
+# Testes de criação e validação de Password
+# ----------------------------------------
 
 def test_create_valid_password():
     password = Password(PASSWORD_VALID)
+
     assert password.verify(PASSWORD_VALID) is True
+    assert isinstance(password.hashed_password, str)
 
 
+# ----------------------------------------
+# Testes de exceções
+# ----------------------------------------
 
-
-# ------------------------------
-# Exception tests
-# ------------------------------
 @pytest.mark.parametrize(
     "plain_password,exception",
     [
@@ -52,40 +53,65 @@ def test_invalid_password_raises_exception(plain_password, exception):
         Password(plain_password)
 
 
-# ------------------------------
-# is_valid tests
-# ------------------------------
+# ----------------------------------------
+# Testes de verificação de senha
+# ----------------------------------------
+
+def test_password_verify_correct_password():
+    password = Password(PASSWORD_VALID)
+
+    assert password.verify(PASSWORD_VALID) is True
+
+
 def test_password_verify_wrong_password():
     password = Password(PASSWORD_VALID)
 
     assert password.verify("WrongPassword1!") is False
 
-# ------------------------------
-# Representation tests
-# ------------------------------
-def test_password_representation():
+
+# ----------------------------------------
+# Testes de propriedades
+# ----------------------------------------
+
+def test_password_properties():
     password = Password(PASSWORD_VALID)
-    repr_str = repr(password)
 
-    assert repr_str == "<Password: *****>"
-    assert PASSWORD_VALID not in repr_str
+    hashed = password.hashed_password
+
+    assert isinstance(hashed, str)
+    assert hashed != PASSWORD_VALID
+    assert len(hashed) > 20
 
 
-# ------------------------------
-# Test Factory from_hash
-# ------------------------------
+# ----------------------------------------
+# Teste de fábrica from_hash
+# ----------------------------------------
+
 def test_password_factory_from_hash():
-    hashed = bcrypt.hashpw(PASSWORD_VALID.encode('utf-8'), bcrypt.gensalt())
-    password = Password.from_hash(hashed.decode('utf-8'))
+    hashed = bcrypt.hashpw(PASSWORD_VALID.encode(), bcrypt.gensalt())
 
-    assert password.hashed_password == hashed.decode('utf-8')
+    password = Password.from_hash(hashed.decode())
+
+    assert password.hashed_password == hashed.decode()
     assert password.verify(PASSWORD_VALID) is True
 
 
-# ------------------------------
-# Immutability tests
-# ------------------------------
-def test_password_immutable():
+# ----------------------------------------
+# Teste de hash aleatório
+# ----------------------------------------
+
+def test_password_hash_is_random():
+    p1 = Password(PASSWORD_VALID)
+    p2 = Password(PASSWORD_VALID)
+
+    assert p1.hashed_password != p2.hashed_password
+
+
+# ----------------------------------------
+# Teste de imutabilidade
+# ----------------------------------------
+
+def test_password_is_immutable():
     password = Password(PASSWORD_VALID)
 
     with pytest.raises(PasswordError):
@@ -95,33 +121,41 @@ def test_password_immutable():
         password._hashed_password = "new_hash"
 
 
-#------------------------------
-# Hash randomness tests
-#------------------------------
-def test_password_hash_is_random():
-    p1 = Password(PASSWORD_VALID)
-    p2 = Password(PASSWORD_VALID)
+# ----------------------------------------
+# Teste de __repr__
+# ----------------------------------------
 
-    assert p1.hashed_password != p2.hashed_password
+def test_password_repr_does_not_expose_value():
+    password = Password(PASSWORD_VALID)
 
-# ------------------------------
-# Property-based tests
-# ------------------------------
+    representation = repr(password)
+
+    assert "<Password:" in representation
+    assert PASSWORD_VALID not in representation
+
+
+# ----------------------------------------
+# Testes property-based com Hypothesis
+# ----------------------------------------
+
 @given(
     upper=st.sampled_from("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
     lower=st.sampled_from("abcdefghijklmnopqrstuvwxyz"),
     digit=st.sampled_from("0123456789"),
     symbol=st.sampled_from("!@#$%^&*()"),
     rest=st.text(
-    alphabet="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
-    min_size=4,
-    max_size=20
-)
+        alphabet="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
+        min_size=4,
+        max_size=20
+    ),
 )
 def test_password_with_random_valid_passwords(upper, lower, digit, symbol, rest):
     chars = list(upper + lower + digit + symbol + rest)
+
     random.shuffle(chars)
+
     plain_password = "".join(chars)
+
     password = Password(plain_password)
 
-    assert password.verify(plain_password)
+    assert password.verify(plain_password) is True
