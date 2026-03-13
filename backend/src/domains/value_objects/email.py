@@ -97,7 +97,7 @@ class Email:
 
 
     #---------------------------------------------------------------
-    # Imutabilidade: impede alterações após criação
+    # Imutabilidade
     #---------------------------------------------------------------
 
     def __setattr__(self, key, value):

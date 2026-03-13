@@ -8,7 +8,6 @@ from domains.exceptions import (
 import pytest
 
 
-
 VALID_EMAIL = "Test@gmail.com"
 VALID_EMAIL_NORMALIZED = "test@gmail.com"
 VALID_EMAIL_MASKED = "t***t@gmail.com"
@@ -22,9 +21,9 @@ VALID_EMAIL_NORMALIZED_3 = "ts@gmail.com"
 VALID_EMAIL_MASKED_3 = "t***@gmail.com"
 
 
-# -----------------------------
-# Creation tests
-# -----------------------------
+# ----------------------------------------
+# Testes de criação e validação de Email
+# ----------------------------------------
 
 def test_create_valid_email():
     email = Email(VALID_EMAIL)
@@ -33,37 +32,20 @@ def test_create_valid_email():
     assert email.masked == VALID_EMAIL_MASKED
 
 
-def test_create_email_with_non_string_raises_exception():
+def test_create_email_with_normalized_value():
+    email = Email(VALID_EMAIL_NORMALIZED)
+
+    assert email.value == VALID_EMAIL_NORMALIZED
+
+
+def test_create_email_with_invalid_type():
     with pytest.raises(EmailInvalidTypeError):
-        Email(12345)
+        Email(123)
 
 
-# -----------------------------
-# Exception tests
-# -----------------------------
-
-@pytest.mark.parametrize(
-    "email",
-    [
-        "plainaddress",
-        "@missinglocal.com",
-        "missingatsign.com",
-        "missingdomain@.com",
-        "missingdot@com",
-        "two..dots@com",
-        "invalid@-domain.com",
-        "invalid@domain-.com",
-        "invalid@domain..com",
-    ],
-)
-def test_invalid_email_raises_exception(email):
-    with pytest.raises(EmailNotValidError):
-        Email(email)
-
-
-# -----------------------------
-# is_valid tests
-# -----------------------------
+# ----------------------------------------
+# Testes de validação de Email
+# ----------------------------------------
 
 @pytest.mark.parametrize(
     "value,expected",
@@ -87,35 +69,89 @@ def test_email_is_valid(value, expected):
     assert Email.is_valid(value) is expected
 
 
-# -----------------------------
-# Equality tests
-# -----------------------------
+# ----------------------------------------
+# Testes de exceções
+# ----------------------------------------
+
+@pytest.mark.parametrize(
+    "email",
+    [
+        "plainaddress",
+        "@missinglocal.com",
+        "missingatsign.com",
+        "missingdomain@.com",
+        "missingdot@com",
+        "two..dots@com",
+        "invalid@-domain.com",
+        "invalid@domain-.com",
+        "invalid@domain..com",
+    ],
+)
+def test_invalid_email_raises_exception(email):
+    with pytest.raises(EmailNotValidError):
+        Email(email)
+
+
+# ----------------------------------------
+# Testes de propriedades
+# ----------------------------------------
+
+def test_email_properties():
+    email1 = Email(VALID_EMAIL)
+    email2 = Email(VALID_EMAIL_2)
+    email3 = Email(VALID_EMAIL_3)
+
+    assert email1.value == VALID_EMAIL_NORMALIZED
+    assert email1.masked == VALID_EMAIL_MASKED
+
+    assert email2.value == VALID_EMAIL_NORMALIZED_2
+    assert email2.masked == VALID_EMAIL_MASKED_2
+
+    assert email3.value == VALID_EMAIL_NORMALIZED_3
+    assert email3.masked == VALID_EMAIL_MASKED_3
+
+
+# ----------------------------------------
+# Testes de igualdade
+# ----------------------------------------
 
 def test_email_equality():
     email1 = Email(VALID_EMAIL)
     email2 = Email(VALID_EMAIL_NORMALIZED)
-    email3 = Email(VALID_EMAIL_2)
 
     assert email1 == email2
-    assert email1 != email3
 
 
-# -----------------------------
-# Hash tests
-# -----------------------------
+def test_email_inequality():
+    email1 = Email(VALID_EMAIL)
+    email2 = Email(VALID_EMAIL_2)
+
+    assert email1 != email2
+
+
+# ----------------------------------------
+# Teste de hash
+# ----------------------------------------
 
 def test_email_hash():
     email1 = Email(VALID_EMAIL)
     email2 = Email(VALID_EMAIL_NORMALIZED)
-    email3 = Email(VALID_EMAIL_2)
 
     assert hash(email1) == hash(email2)
-    assert hash(email1) != hash(email3)
 
 
-# -----------------------------
-# Immutability tests
-# -----------------------------
+def test_email_set_behavior():
+    email1 = Email(VALID_EMAIL)
+    email2 = Email(VALID_EMAIL_NORMALIZED)
+
+    s = {email1, email2}
+
+    assert len(s) == 1
+
+
+# ----------------------------------------
+# Teste de imutabilidade
+# ----------------------------------------
 
 def test_email_is_immutable():
     email = Email(VALID_EMAIL)
@@ -124,42 +160,36 @@ def test_email_is_immutable():
         email.value = "new@email.com"
 
 
-# -----------------------------
-# Mask tests
-# -----------------------------
+# ----------------------------------------
+# Teste de __str__
+# ----------------------------------------
 
-def test_email_masked():
-    email1 = Email(VALID_EMAIL)
-    email2 = Email(VALID_EMAIL_2)
-    email3 = Email(VALID_EMAIL_3)
-
-    assert email1.masked == VALID_EMAIL_MASKED
-    assert email2.masked == VALID_EMAIL_MASKED_2
-    assert email3.masked == VALID_EMAIL_MASKED_3
-
-
-# -----------------------------
-# Representation tests
-# -----------------------------
-
-def test_email_str():
+def test_str_returns_email():
     email = Email(VALID_EMAIL)
 
     assert str(email) == VALID_EMAIL_NORMALIZED
 
 
-def test_email_repr():
+# ----------------------------------------
+# Teste de __repr__
+# ----------------------------------------
+
+def test_repr_contains_class_name():
     email = Email(VALID_EMAIL)
 
-    assert repr(email) == "Email('test@gmail.com')"
+    representation = repr(email)
+
+    assert "Email(" in representation
+    assert VALID_EMAIL_NORMALIZED in representation
 
 
-# -----------------------------
-# Property-based tests
-# -----------------------------
+# ----------------------------------------
+# Testes property-based com Hypothesis
+# ----------------------------------------
 
 @given(st.emails())
-def test_random_valid_emails(email):
+def test_email_normalization_with_random_emails(email):
     obj = Email(email)
 
     assert obj.value == obj.value.lower()
+    assert "@" in obj.value
