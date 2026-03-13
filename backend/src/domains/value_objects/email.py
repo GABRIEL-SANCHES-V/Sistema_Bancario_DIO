@@ -33,6 +33,11 @@ class Email:
 
         object.__setattr__(self, "_value", validated.normalized.lower())
 
+
+    # ---------------------------------------------------------------
+    # Propriedades
+    # ---------------------------------------------------------------
+
     @property
     def value(self) -> str:
         return self._value
@@ -50,8 +55,9 @@ class Email:
 
 
     #---------------------------------------------------------------
-    # Validação: método público para verificar se um email é válido
+    # Validação publica
     #---------------------------------------------------------------
+
     @classmethod
     def is_valid(cls, value: str) -> bool:
         try:
@@ -61,40 +67,38 @@ class Email:
             return False
 
     
-    #----------------------------------------------------
-    # Igualdade: compara o valor do email para igualdade
-    #----------------------------------------------------
+    #---------------------------------------------------------------
+    # Igualdade
+    #---------------------------------------------------------------
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Email):
             return NotImplemented
         return self._value == other._value
 
 
-    #----------------------------------------------------
-    # Hash: permite uso em sets e como chave de dicionário
-    #----------------------------------------------------
+    #---------------------------------------------------------------
+    # Hash
+    #---------------------------------------------------------------
+
     def __hash__(self) -> int:
         return hash(self._value)
 
 
-    #----------------------------------------------------
-    # Representação: string simples para exibição
-    #----------------------------------------------------
+    #---------------------------------------------------------------
+    # Representação
+    #---------------------------------------------------------------
+
     def __str__(self) -> str:
         return self._value
 
-
-    #----------------------------------------------------
-    # Representação: string formatada para exibição
-    #----------------------------------------------------
     def __repr__(self) -> str:
         return f"Email('{self._value}')"
 
 
-    #----------------------------------------------------
+    #---------------------------------------------------------------
     # Imutabilidade: impede alterações após criação
-    #----------------------------------------------------
+    #---------------------------------------------------------------
+
     def __setattr__(self, key, value):
-        if hasattr(self, "_value"):
-            raise EmailError("Email é um objeto imutável.")
-        super().__setattr__(key, value)
+        raise EmailError("Email é um objeto imutável. Não é possível alterar o valor após a criação.")

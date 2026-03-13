@@ -45,26 +45,47 @@ class Password:
         object.__setattr__(self, '_hashed_password', hashed)
     
 
-    #---------------------------------------------------------------
-    # Propriedades para acessar o hash e verificar a senha
-    #---------------------------------------------------------------
+    # ---------------------------------------------------------------
+    # Propriedades
+    # ---------------------------------------------------------------
+
     @property
     def hashed_password(self) -> str:
         return self._hashed_password.decode('utf-8')
     
 
     #---------------------------------------------------------------
-    # Método para verificar se uma senha em texto plano corresponde ao hash armazenado
+    # Verificação de senha
     #---------------------------------------------------------------
+
     def verify(self, plain_password: str) -> bool:
         return bcrypt.checkpw(
             plain_password.encode("utf-8"),
             self._hashed_password
         )
 
+
     #---------------------------------------------------------------
-    # Validação: regras de complexidade da senha
+    # Fábrica para criar um Password a partir de um hash existente
     #---------------------------------------------------------------
+
+    @classmethod
+    def from_hash(cls, hashed_password: str):
+
+        obj = cls.__new__(cls)
+
+        object.__setattr__(
+            obj,
+            "_hashed_password",
+            hashed_password.encode()
+        )
+
+        return obj
+    
+    #---------------------------------------------------------------
+    # Validação
+    #---------------------------------------------------------------
+
     def _validate_password(self, plain_password: str) -> None:
         if not isinstance(plain_password, str):
             raise PasswordInvalidTypeError(type(plain_password))
@@ -86,32 +107,15 @@ class Password:
 
 
     #---------------------------------------------------------------
-    # Representação para debugging (não mostra a senha real)
+    # Representação
     #---------------------------------------------------------------
+
     def __repr__(self) -> str:
         return f"<Password: *****>"
     
 
     #---------------------------------------------------------------
-    # Fábrica para criar um Password a partir de um hash existente (ex: do banco)
-    #---------------------------------------------------------------
-    @classmethod
-    def from_hash(cls, hashed_password: str):
-
-        obj = cls.__new__(cls)
-
-        object.__setattr__(
-            obj,
-            "_hashed_password",
-            hashed_password.encode()
-        )
-
-        return obj
-
-    #---------------------------------------------------------------
     # Imutabilidade: não permite alterar o hash depois de criado
     #---------------------------------------------------------------
     def __setattr__(self, key, value):
-        if hasattr(self, '_hashed_password'):
-            raise PasswordError("Password é um objeto imutável.")
-        super().__setattr__(key, value)
+        raise PasswordError("Password é um objeto imutável. Não é possível alterar o valor depois de criado.")

@@ -41,9 +41,10 @@ class BirthDate:
         object.__setattr__(self, "_value", value)
 
 
-    #--------------------------------------------------------
-    # Propriedades para acesso ao valor e formatações comuns
-    #--------------------------------------------------------
+    # ---------------------------------------------------------------
+    # Propriedades
+    # ---------------------------------------------------------------
+
     @property
     def value(self) -> date:
         return self._value
@@ -82,8 +83,9 @@ class BirthDate:
     
 
     #---------------------------------------------------------------
-    # Validação: método público para verificar se uma data de nascimento é válida
+    # Validação pública
     #---------------------------------------------------------------
+
     @classmethod
     def is_valid(cls, value: date | str) -> bool:
         try:
@@ -94,8 +96,9 @@ class BirthDate:
         
     
     #---------------------------------------------------------------
-    # Normalização: método privado para converter strings em objetos date, suportando formatos ISO e BR
+    # Normalização e Validação
     #---------------------------------------------------------------
+
     @staticmethod
     def _normalize_date_string(value: str) -> date:
 
@@ -115,9 +118,6 @@ class BirthDate:
         else:
             raise BirthDateInvalidFormatError(value)
 
-    #---------------------------------------------------------------
-    # Validação: Metodo privado para verificar se a data de nascimento é válida (não futura, não muito antiga)
-    #---------------------------------------------------------------
     @staticmethod
     def _validate_birth_date(value: date) -> None:
         today = date.today()
@@ -128,8 +128,9 @@ class BirthDate:
     
 
     #---------------------------------------------------------------
-    # Igualdade: comparação baseada no valor da data de nascimento
+    # Igualdade
     #---------------------------------------------------------------
+
     def __eq__(self, other) -> bool:
         if isinstance(other, BirthDate):
             return self._value == other._value
@@ -141,26 +142,25 @@ class BirthDate:
 
     
     #---------------------------------------------------------------
-    # Hash: baseado no valor da data de nascimento para uso em coleções
+    # Representação
     #---------------------------------------------------------------
-    def __hash__(self) -> int:
-        return hash(self._value)
-    
 
-    #---------------------------------------------------------------
-    # Representação: string legível para depuração e logs
-    #---------------------------------------------------------------
     def __str__(self) -> str:
         return self.formatted_br
     
     def __repr__(self) -> str:
         return f"BirthDate({self._value.isoformat()})"
+    
+    #---------------------------------------------------------------
+    # Hash
+    #---------------------------------------------------------------
 
+    def __hash__(self) -> int:
+        return hash(self._value)
+    
 
     #---------------------------------------------------------------
-    # Imutabilidade: bloqueia a modificação do valor após a criação
+    # Imutabilidade
     #---------------------------------------------------------------
     def __setattr__(self, key, value) -> None:
-        if hasattr(self, "_value"):
-            raise BirthDateError("BirthDate é um objeto imutável, não pode ser modificado.")
-        super().__setattr__(key, value)
+        raise BirthDateError("BirthDate é um objeto imutável, não pode ser modificado.")

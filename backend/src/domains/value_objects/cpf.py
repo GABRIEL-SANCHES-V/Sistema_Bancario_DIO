@@ -8,7 +8,6 @@ from domains.exceptions import (
     CPFInvalidTypeError,
 )
 
-#Regex fora da classe para evitar recompilação a cada instância criada, já que é imutável e pode ser reutilizada
 _NON_DIGIT_RE = re.compile(r"\D")
 
 class CPF:
@@ -25,7 +24,6 @@ class CPF:
         - Pode ser utilizado em sets e como chave de dicionário
     """
 
-    #Foi feito para limita os atributos para economizar memória e reforçar a imutabilidade
     __slots__ = ("_value",)
 
     def __init__(self, value: str) -> None:
@@ -36,20 +34,21 @@ class CPF:
         
         self._validate_cpf(value_normalized)
 
-        #Burla a imutabilidade para definir o valor após validação, mas só dentro do constructor
         object.__setattr__(self, "_value", value_normalized)
 
+
+    # ---------------------------------------------------------------
+    # Propriedades
+    # ---------------------------------------------------------------
 
     @property
     def value(self) -> str:
         return self._value
-    
 
     @property
     def formatted(self) -> str:
         cpf = self._value
         return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
-    
     
     @property
     def masked(self) -> str:
@@ -58,16 +57,7 @@ class CPF:
     
 
     #---------------------------------------------------------------
-    # Normalização: remove caracteres não numéricos para validação
-    #---------------------------------------------------------------
-
-    @staticmethod
-    def _normalized_cpf(value: str) -> str:
-        return _NON_DIGIT_RE.sub("", value)
-    
-
-    #---------------------------------------------------------------
-    # Validação: método público para verificar se um CPF é válido
+    # Validação pública
     #---------------------------------------------------------------
 
     @classmethod
@@ -78,9 +68,14 @@ class CPF:
         except CPFError:
             return False
 
+
     #---------------------------------------------------------------
-    # Validação: regras específicas do CPF (tamanho, dígitos, etc)
+    # Normalização e Validação
     #---------------------------------------------------------------
+
+    @staticmethod
+    def _normalized_cpf(value: str) -> str:
+        return _NON_DIGIT_RE.sub("", value)
 
     @classmethod
     def _validate_cpf(cls, cpf: str) -> None:
@@ -91,7 +86,6 @@ class CPF:
             raise CPFRepeatedDigitsError()
         
         cls._validate_check_digits(cpf)
-
     
     @classmethod
     def _validate_check_digits(cls, cpf: str) -> None:
@@ -99,7 +93,6 @@ class CPF:
 
         if cpf[-2:] != cls._calculate_check_digits(digits):
             raise CPFInvalidCheckDigitsError()
-
 
     @staticmethod
     def _calculate_check_digits(cpf: str) -> str:
@@ -116,7 +109,7 @@ class CPF:
     
 
     #---------------------------------------------------------------
-    # Igualdade: compara o valor do CPF, não a identidade do objeto
+    # Igualdade
     #---------------------------------------------------------------
 
     def __eq__(self, other: object) -> bool:
@@ -128,15 +121,6 @@ class CPF:
 
         return NotImplemented
         
-
-
-    #----------------------------------------------------
-    # Hash: permite uso em sets e como chave de dicionário
-    #----------------------------------------------------
-
-    def __hash__(self) -> int:
-        return hash(self._value)
-    
 
     #----------------------------------------------------
     # Representação: string formatada para exibição
@@ -151,10 +135,16 @@ class CPF:
     
 
     #----------------------------------------------------
+    # Hash
+    #----------------------------------------------------
+
+    def __hash__(self) -> int:
+        return hash(self._value)
+    
+
+    #----------------------------------------------------
     # Imutabilidade: impede alterações após criação
     #----------------------------------------------------
     
     def __setattr__(self, key: str, value: object) -> None:
-        if hasattr(self, "_value"):
-            raise CPFError("CPF é um objeto imutável.")
-        super().__setattr__(key, value)
+        raise CPFError("CPF é um objeto imutável. Não é possível alterar o valor após a criação.")

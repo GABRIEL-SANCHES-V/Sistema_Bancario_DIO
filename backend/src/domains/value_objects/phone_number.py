@@ -77,6 +77,10 @@ class PhoneNumber:
         object.__setattr__(self, "_value", normalized)
     
 
+    # ---------------------------------------------------------------
+    # Propriedades
+    # ---------------------------------------------------------------
+
     @property
     def value(self) -> str:
         return self._value
@@ -98,17 +102,10 @@ class PhoneNumber:
         return self._value[2:]
 
 
-    #---------------------------------------------------------------
-    # Normalização: remove caracteres não numéricos para validação
-    #---------------------------------------------------------------
-    @staticmethod
-    def _normalize_phone_number(value: str) -> str:
-        return _NON_DIGIT_RE.sub("", value)
-    
+    # ---------------------------------------------------------------
+    # Validação pública
+    # ---------------------------------------------------------------
 
-    #---------------------------------------------------------------
-    # Validação: método público para verificar se um número de celular é válido
-    #---------------------------------------------------------------
     @classmethod
     def is_valid(cls, value: str) -> bool:
         try:
@@ -117,9 +114,14 @@ class PhoneNumber:
         except PhoneNumberError:
             return False
 
-    #---------------------------------------------------------------
-    # Validação: regras específicas do número de celular (tamanho, dígito)
-    #---------------------------------------------------------------
+    # ---------------------------------------------------------------
+    # Normalização e Validação 
+    # ---------------------------------------------------------------
+    
+    @staticmethod
+    def _normalize_phone_number(value: str) -> str:
+        return _NON_DIGIT_RE.sub("", value)
+    
     @staticmethod
     def _validate_phone_number(value: str) -> None:
         if len(value) != 11:
@@ -134,8 +136,9 @@ class PhoneNumber:
 
 
     #---------------------------------------------------------------
-    # Igualdade: comparação baseada no valor do número de celular
+    # Igualdade
     #---------------------------------------------------------------
+    
     def __eq__(self, other) -> bool:
         if isinstance(other, PhoneNumber):
             return self._value == other._value
@@ -147,15 +150,17 @@ class PhoneNumber:
 
 
     #---------------------------------------------------------------
-    # Hash: baseado no valor do número de celular para uso em sets e dicionários
+    # Hash
     #---------------------------------------------------------------
+
     def __hash__(self) -> int:
         return hash(self._value)
 
 
     #---------------------------------------------------------------
-    # Representação: string formatada para facilitar leitura
+    # Representação
     #---------------------------------------------------------------
+
     def __str__(self) -> str:
         return self.formatted
     
@@ -164,9 +169,8 @@ class PhoneNumber:
     
 
     #---------------------------------------------------------------
-    # Imutabilidade: impede alterações após criação
+    # Imutabilidade
     #---------------------------------------------------------------
+
     def __setattr__(self, key, value):
-        if hasattr(self, "_value"):
-            raise PhoneNumberError("PhoneNumber é um objeto imutável, e não pode ser modificado após a criação.")
-        super().__setattr__(key, value)
+        raise PhoneNumberError("PhoneNumber é um objeto imutável. Não é possível alterar o valor após a criação.")

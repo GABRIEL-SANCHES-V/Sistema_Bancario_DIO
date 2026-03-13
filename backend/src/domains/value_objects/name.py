@@ -13,6 +13,19 @@ MIN_NAME_LENGTH = 8
 MAX_NAME_LENGTH = 100
 
 class Name:
+    """
+        Value Object para representar um nome válido.
+
+        Este Objeto encapsula a lógica de validação e formatação de um nome.
+        Ele é imutável após a criação, garantindo que o valor do nome não possa ser alterado.
+
+        Características:
+            - Valida o formato do nome (apenas letras e espaços, sem números ou caracteres especiais)
+            - Valida o comprimento do nome (entre 8 e 100 caracteres)
+            - Fornece uma representação formatada para exibição
+            - Pode ser utilizado em sets e como chave de dicionário
+            - Garante imutabilidade após a criação
+    """
 
     __slots__ = ("_name",)
 
@@ -37,7 +50,7 @@ class Name:
 
 
     # ---------------------------------------------------------------
-    # Validação Publica
+    # Validação publica
     # ---------------------------------------------------------------
 
     @classmethod
@@ -79,13 +92,18 @@ class Name:
     
 
     # ---------------------------------------------------------------
-    # Igualdade e hash
+    # Igualdade
     # ---------------------------------------------------------------
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Name):
             return self._name == other._name
         return NotImplemented
+    
+
+    # ---------------------------------------------------------------
+    # Hash
+    # ---------------------------------------------------------------
 
     def __hash__(self) -> int:
         return hash(self._name)

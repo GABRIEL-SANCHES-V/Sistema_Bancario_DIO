@@ -61,6 +61,11 @@ class State:
 
         object.__setattr__(self, "_state", state)
 
+
+    # ---------------------------------------------------------------
+    # Propriedades
+    # ---------------------------------------------------------------
+
     @property
     def state(self) -> str:
         return self._state
@@ -74,9 +79,9 @@ class State:
         return f"{self._state} ({self.uf})"
 
 
-    #---------------------------------------------------------------
-    # Validação: método público para verificar se um estado é válido
-    #---------------------------------------------------------------
+    # ---------------------------------------------------------------
+    # Validação pública
+    # ---------------------------------------------------------------
    
     @classmethod
     def is_valid(cls, value: str) -> bool:
@@ -87,9 +92,9 @@ class State:
             return False
 
 
-    #----------------------------------------------------
-    # Normalização e Validação: método privado para padronizar e validar o estado
-    #----------------------------------------------------
+    # ---------------------------------------------------------------
+    # Normalização e Validação 
+    # ---------------------------------------------------------------
 
     @staticmethod
     def _normalize_string(value: str) -> str:
@@ -109,9 +114,9 @@ class State:
             raise StateInvalidError(value)
 
     
-    #----------------------------------------------------
-    # Igualdade: compara o valor do estado para igualdade
-    #----------------------------------------------------
+    # ---------------------------------------------------------------
+    # Igualdade
+    # ---------------------------------------------------------------
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, State):
@@ -119,33 +124,28 @@ class State:
         return self._state == other._state
 
 
-    #----------------------------------------------------
-    # Hash: permite uso em sets e como chave de dicionário
-    #----------------------------------------------------
+    # ---------------------------------------------------------------
+    # Hash
+    # ---------------------------------------------------------------
 
     def __hash__(self) -> int:
         return hash(self._state)
 
 
-    #----------------------------------------------------
-    # Representação: string simples para exibição
-    #----------------------------------------------------
+    # ---------------------------------------------------------------
+    # Representação
+    # ---------------------------------------------------------------
 
     def __str__(self) -> str:
         return self.formatted
 
-
-    #----------------------------------------------------
-    # Representação: string formatada para exibição
-    #----------------------------------------------------
-
     def __repr__(self) -> str:
         return f"State('{self.uf}')"
-    
 
-    #----------------------------------------------------
-    # Imutabilidade: impede alterações após criação
-    #----------------------------------------------------
+
+    # ---------------------------------------------------------------
+    # Imutabilidade
+    # ---------------------------------------------------------------
 
     def __setattr__(self, key: str, value: object) -> None:
         raise StateError("State é imutável e não pode ser alterado após criação.")
