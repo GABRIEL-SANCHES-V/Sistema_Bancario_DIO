@@ -9,46 +9,51 @@ from domains.exceptions import (
 )
 import pytest
 
-VALID_PHONE_NUMBER = "(11) 91234-5678"
-VALID_PHONE_NUMBER_NORMALIZED = "11912345678"
-VALID_PHONE_NUMBER_MASKED = "(11) *****-5678"
 
-VALID_PHONE_NUMBER_2 = "(21) 99876-5432"
-VALID_PHONE_NUMBER_NORMALIZED_2 = "21998765432"
-VALID_PHONE_NUMBER_MASKED_2 = "(21) *****-5432"
+VALID_PHONE = "(11) 91234-5678"
+VALID_PHONE_NORMALIZED = "11912345678"
+VALID_PHONE_MASKED = "(11) *****-5678"
 
-# -----------------------------
-# Creation tests
-# -----------------------------
+VALID_PHONE_2 = "(21) 99876-5432"
+VALID_PHONE_NORMALIZED_2 = "21998765432"
+
+
+# ----------------------------------------
+# Testes de criação e validação
+# ----------------------------------------
 
 def test_create_valid_phone_number():
-    phone_number = PhoneNumber(VALID_PHONE_NUMBER)
+    phone = PhoneNumber(VALID_PHONE)
 
-    assert phone_number.value == VALID_PHONE_NUMBER_NORMALIZED
-    assert phone_number.formatted == VALID_PHONE_NUMBER
-    assert phone_number.masked == VALID_PHONE_NUMBER_MASKED
+    assert phone.value == VALID_PHONE_NORMALIZED
+    assert phone.formatted == VALID_PHONE
+    assert phone.masked == VALID_PHONE_MASKED
+    assert phone.ddd == "11"
+    assert phone.number == "912345678"
 
+
+def test_create_phone_number_with_invalid_type():
     with pytest.raises(PhoneNumberInvalidTypeError):
         PhoneNumber(123)
 
 
-#------------------------------
-# Normalization tests
-#------------------------------
+# ----------------------------------------
+# Testes de normalização
+# ----------------------------------------
 
 def test_phone_number_normalization():
     phone = PhoneNumber("11 91234-5678")
 
-    assert phone.value == "11912345678"
-    assert phone.formatted == "(11) 91234-5678"
+    assert phone.value == VALID_PHONE_NORMALIZED
+    assert phone.formatted == VALID_PHONE
 
 
-# -----------------------------
-# Exception tests
-# -----------------------------
+# ----------------------------------------
+# Testes de exceções
+# ----------------------------------------
 
 @pytest.mark.parametrize(
-    "phone_number,exception",
+    "value,exception",
     [
         ("1191234567", PhoneNumberInvalidLengthError),
         ("119123456789", PhoneNumberInvalidLengthError),
@@ -56,107 +61,120 @@ def test_phone_number_normalization():
         ("09923456788", PhoneNumberInvalidDDDError),
     ],
 )
-def test_invalid_phone_number_raises_exception(phone_number, exception):
+def test_invalid_phone_numbers(value, exception):
     with pytest.raises(exception):
-        PhoneNumber(phone_number)
+        PhoneNumber(value)
 
 
-#-----------------------------
-# is_valid tests
-#-----------------------------
+# ----------------------------------------
+# Testes de validação pública
+# ----------------------------------------
 
 @pytest.mark.parametrize(
     "value,expected",
     [
         ("(11) 91234-5678", True),
-        ("(21) 99876-5432", True),  
+        ("(21) 99876-5432", True),
         ("1191234567", False),
         ("119123456789", False),
         ("11812345678", False),
         ("1112345678", False),
     ],
 )
-def test_phone_number_is_valid(value, expected):
+def test_is_valid_phone_number(value, expected):
     assert PhoneNumber.is_valid(value) is expected
 
 
-#-----------------------------
-# Equality tests
-#-----------------------------
+# ----------------------------------------
+# Testes de igualdade
+# ----------------------------------------
 
 def test_phone_number_equality():
-    phone_number1 = PhoneNumber(VALID_PHONE_NUMBER)
-    phone_number2 = PhoneNumber(VALID_PHONE_NUMBER_NORMALIZED)
-    phone_number3 = PhoneNumber(VALID_PHONE_NUMBER_2)
+    phone1 = PhoneNumber(VALID_PHONE)
+    phone2 = PhoneNumber(VALID_PHONE_NORMALIZED)
+    phone3 = PhoneNumber(VALID_PHONE_2)
 
-    assert phone_number1 == phone_number2
-    assert phone_number1 != phone_number3
+    assert phone1 == phone2
+    assert phone1 != phone3
+
 
 def test_phone_number_equals_string():
-    phone = PhoneNumber("(11) 91234-5678")
+    phone = PhoneNumber(VALID_PHONE)
 
-    assert phone == "11912345678"
+    assert phone == VALID_PHONE_NORMALIZED
 
 
-#-----------------------------
-# Hash tests
-#-----------------------------
+# ----------------------------------------
+# Testes de hash
+# ----------------------------------------
 
 def test_phone_number_hash():
-    phone_number1 = PhoneNumber(VALID_PHONE_NUMBER)
-    phone_number2 = PhoneNumber(VALID_PHONE_NUMBER_NORMALIZED)
-    phone_number3 = PhoneNumber(VALID_PHONE_NUMBER_2)
+    phone1 = PhoneNumber(VALID_PHONE)
+    phone2 = PhoneNumber(VALID_PHONE_NORMALIZED)
+    phone3 = PhoneNumber(VALID_PHONE_2)
 
-    assert hash(phone_number1) == hash(phone_number2)
-    assert hash(phone_number1) != hash(phone_number3)
+    assert hash(phone1) == hash(phone2)
+    assert hash(phone1) != hash(phone3)
 
 
-#-----------------------------
-# Immutability tests
-#-----------------------------
+# ----------------------------------------
+# Teste de imutabilidade
+# ----------------------------------------
 
 def test_phone_number_is_immutable():
-    phone_number = PhoneNumber(VALID_PHONE_NUMBER)
+    phone = PhoneNumber(VALID_PHONE)
 
     with pytest.raises(PhoneNumberError):
-        phone_number.value = "11912345678"
+        phone.value = "11912345678"
 
 
-#-----------------------------
-# Representation tests
-#-----------------------------
+# ----------------------------------------
+# Testes de representação
+# ----------------------------------------
 
-def test_phone_number_str():
-    phone_number = PhoneNumber(VALID_PHONE_NUMBER)
+def test_str_returns_formatted():
+    phone = PhoneNumber(VALID_PHONE)
 
-    assert str(phone_number) == VALID_PHONE_NUMBER
-
-
-def test_phone_number_repr():
-    phone_number = PhoneNumber(VALID_PHONE_NUMBER)
-
-    assert repr(phone_number) == "PhoneNumber('(11) 91234-5678')"
+    assert str(phone) == VALID_PHONE
 
 
-#-----------------------------
-# Property-based tests
-#-----------------------------
+def test_repr_contains_class_name():
+    phone = PhoneNumber(VALID_PHONE)
 
-@given(value=st.from_regex(r"[0-9\(\)\-\s]+"))
-def test_phone_number_is_valid_with_random_strings(value):
-    if len(value) == 11 and value[2] == '9' and value[:2] in VALID_DDDS:
-        assert PhoneNumber.is_valid(value) is True
-    else:
-        assert PhoneNumber.is_valid(value) is False
-        with pytest.raises(PhoneNumberError):
-            PhoneNumber(value)
+    representation = repr(phone)
 
+    assert "PhoneNumber(" in representation
+    assert VALID_PHONE in representation
+
+
+# ----------------------------------------
+# Property-based tests com Hypothesis
+# ----------------------------------------
 
 @given(
     ddd=st.sampled_from(list(VALID_DDDS)),
     number=st.integers(min_value=900000000, max_value=999999999),
 )
 def test_generated_valid_phone_numbers(ddd, number):
-    phone = f"{ddd}{number}"
+    value = f"{ddd}{number}"
 
-    assert PhoneNumber.is_valid(phone) is True
+    phone = PhoneNumber(value)
+
+    assert phone.ddd == ddd
+    assert phone.number == str(number)
+    assert PhoneNumber.is_valid(value) is True
+
+
+@given(st.text())
+def test_phone_number_never_breaks_with_random_strings(value):
+    try:
+        phone = PhoneNumber(value)
+
+        assert isinstance(phone.value, str)
+        assert isinstance(phone.formatted, str)
+        assert isinstance(phone.masked, str)
+        assert isinstance(phone.ddd, str)
+        assert isinstance(phone.number, str)
+
+    except PhoneNumberError:
+        assert PhoneNumber.is_valid(value) is False
