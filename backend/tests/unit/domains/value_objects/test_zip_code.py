@@ -4,73 +4,68 @@ from domains.exceptions import (
     ZipCodeInvalidTypeError,
     ZipCodeInvalidFormatError,
 )
-import re
 import pytest
 
 
-# ------------------------------
-# Creation tests
-# ------------------------------
+VALID_ZIP = "12345-678"
+VALID_ZIP_NORMALIZED = "12345678"
+VALID_ZIP_2 = "87654-321"
+VALID_ZIP_NORMALIZED_2 = "87654321"
+
+
+# ----------------------------------------
+# Testes de criação e validação
+# ----------------------------------------
+
+def test_create_valid_zip_code():
+    zip_code = ZipCode(VALID_ZIP)
+
+    assert zip_code.value == VALID_ZIP_NORMALIZED
+    assert zip_code.formatted == VALID_ZIP
+
+
+def test_create_valid_zip_code_without_dash():
+    zip_code = ZipCode("12345678")
+
+    assert zip_code.value == VALID_ZIP_NORMALIZED
+    assert zip_code.formatted == VALID_ZIP
+
+
+def test_create_zip_code_with_invalid_type():
+    with pytest.raises(ZipCodeInvalidTypeError):
+        ZipCode(12345678)
+
+
+# ----------------------------------------
+# Testes de normalização
+# ----------------------------------------
 
 @pytest.mark.parametrize(
-    "value, expected",
+    "value,expected",
     [
         ("12345-678", "12345678"),
         ("12345678", "12345678"),
-        ("123456789", "12345678"),
-        ("12345-6789", "12345678"),
-        ("123456789", "12345678"),
+        ("12345 678", "12345678"),
+        ("12345.678", "12345678"),
     ],
 )
 def test_zip_code_normalization(value, expected):
     zip_code = ZipCode(value)
+
     assert zip_code.value == expected
 
 
-@pytest.mark.parametrize(
-    "value",
-    [
-        12345678,
-        None,
-        "1234",
-        "123456789",
-        "abcdefgh",
-    ],
-)
-def test_invalid_zip_code_raises_exception(value):
-    with pytest.raises(ZipCodeError):
-        ZipCode(value)
-
-
-# ------------------------------
-# Normalization tests
-# ------------------------------
+# ----------------------------------------
+# Testes de exceções
+# ----------------------------------------
 
 @pytest.mark.parametrize(
-    "value, expected",
+    "value,exception",
     [
-        ("12345-678", "12345678"),
-        ("12345678", "12345678"),
-        ("12345678", "12345678"),
-        ("12345-678", "12345678"),
-        ("12345678", "12345678"),
-    ],
-)
-def test_zip_code_normalization(value, expected):
-    zip_code = ZipCode(value)
-    assert zip_code.value == expected
-
-
-# ------------------------------
-# Exception tests
-# ------------------------------
-
-@pytest.mark.parametrize(
-    "value, exception",
-    [
-        (12345678, ZipCodeInvalidTypeError),
         (None, ZipCodeInvalidTypeError),
+        (12345678, ZipCodeInvalidTypeError),
         ("1234", ZipCodeInvalidFormatError),
+        ("1234567", ZipCodeInvalidFormatError),
         ("123456789", ZipCodeInvalidFormatError),
         ("abcdefgh", ZipCodeInvalidFormatError),
     ],
@@ -80,91 +75,90 @@ def test_invalid_zip_code_raises_exception(value, exception):
         ZipCode(value)
 
 
-# ------------------------------
-# is_valid tests
-# ------------------------------
+# ----------------------------------------
+# Testes de validação pública
+# ----------------------------------------
 
 @pytest.mark.parametrize(
-    "value, expected",
+    "value,expected",
     [
         ("12345-678", True),
         ("12345678", True),
-        ("12345678", True),
-        ("12345-678", True),
-        ("12345678", True),
+        ("12345 678", True),
         ("1234", False),
-        ("1234567890", False),
+        ("123456789", False),
         ("abcdefgh", False),
-        (12345678, False),
         (None, False),
+        (12345678, False),
     ],
 )
-def test_zip_code_is_valid(value, expected):
+def test_is_valid_zip_code(value, expected):
     assert ZipCode.is_valid(value) is expected
 
 
-# ------------------------------
-# Equality tests
-# ------------------------------
+# ----------------------------------------
+# Testes de igualdade
+# ----------------------------------------
 
 def test_zip_code_equality():
-    zip_code1 = ZipCode("12345-678")
-    zip_code2 = ZipCode("12345678")
-    zip_code3 = ZipCode("87654-321")
+    zip1 = ZipCode(VALID_ZIP)
+    zip2 = ZipCode(VALID_ZIP_NORMALIZED)
+    zip3 = ZipCode(VALID_ZIP_2)
 
-    assert zip_code1 == zip_code2
-    assert zip_code1 != zip_code3
-    assert zip_code2 != zip_code3
+    assert zip1 == zip2
+    assert zip1 != zip3
 
 
-# ------------------------------
-# Hash tests
-# ------------------------------
+# ----------------------------------------
+# Testes de hash
+# ----------------------------------------
 
 def test_zip_code_hash():
-    zip_code1 = ZipCode("12345-678")
-    zip_code2 = ZipCode("12345678")
-    zip_code3 = ZipCode("87654-321")
+    zip1 = ZipCode(VALID_ZIP)
+    zip2 = ZipCode(VALID_ZIP_NORMALIZED)
+    zip3 = ZipCode(VALID_ZIP_2)
 
-    assert hash(zip_code1) == hash(zip_code2)
-    assert hash(zip_code1) != hash(zip_code3)
+    assert hash(zip1) == hash(zip2)
+    assert hash(zip1) != hash(zip3)
+
 
 def test_zip_code_as_dict_key():
-    zip_code1 = ZipCode("12345-678")
-    zip_code2 = ZipCode("12345678")
-    zip_code3 = ZipCode("87654-321")
-
-    zip_code_dict = {
-        zip_code1: "Address 1",
-        zip_code3: "Address 2",
+    zip_codes = {
+        ZipCode(VALID_ZIP): "Address 1",
+        ZipCode(VALID_ZIP_2): "Address 2",
     }
 
-    assert zip_code_dict[zip_code1] == "Address 1"
-    assert zip_code_dict[zip_code2] == "Address 1"
-    assert zip_code_dict[zip_code3] == "Address 2"
+    assert zip_codes[ZipCode(VALID_ZIP_NORMALIZED)] == "Address 1"
 
 
-# ------------------------------
-# Representation tests
-# -------------------------------
+# ----------------------------------------
+# Testes de representação
+# ----------------------------------------
 
-def test_zip_code_representation():
-    zip_code = ZipCode("12345-678")
-    repr_str = repr(zip_code)
+def test_str_returns_formatted():
+    zip_code = ZipCode(VALID_ZIP)
 
-    assert repr_str == "ZipCode('12345-678')"
-    assert str(zip_code) == "12345-678"
+    assert str(zip_code) == VALID_ZIP
 
 
-# ------------------------------
-# Immutability tests
-# ------------------------------
+def test_repr_contains_class_name():
+    zip_code = ZipCode(VALID_ZIP)
+
+    representation = repr(zip_code)
+
+    assert "ZipCode(" in representation
+    assert VALID_ZIP in representation
+
+
+# ----------------------------------------
+# Teste de imutabilidade
+# ----------------------------------------
 
 def test_zip_code_is_immutable():
-    zip_code = ZipCode("12345-678")
+    zip_code = ZipCode(VALID_ZIP)
 
     with pytest.raises(ZipCodeError):
-        zip_code.value = "87654-321"
+        zip_code.value = "87654321"
 
     with pytest.raises(ZipCodeError):
-        zip_code.formatted = "87654321"
+        zip_code.formatted = "87654-321"

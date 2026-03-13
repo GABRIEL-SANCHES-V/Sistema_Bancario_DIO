@@ -148,7 +148,7 @@ def test_repr_contains_class_name():
 
 
 # ----------------------------------------
-# Property-based tests com Hypothesis
+# Property-based testes com Hypothesis
 # ----------------------------------------
 
 @given(

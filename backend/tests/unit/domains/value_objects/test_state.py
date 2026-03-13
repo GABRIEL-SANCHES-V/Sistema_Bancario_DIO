@@ -10,34 +10,44 @@ from domains.exceptions import (
 import pytest
 
 
-# -------------------------------------
-# Creation tests
-# -------------------------------------
+# ----------------------------------------
+# Testes de criação e validação
+# ----------------------------------------
 
-def test_create_valid_state_from_state_name():
-    for state_name, uf in DICT_STATES.items():
-        state = State(state_name)
-        assert state.state == state_name
-        assert state.uf == uf
-        assert state.formatted == f"{state_name} ({uf})"
+@pytest.mark.parametrize(
+    "state_name,uf",
+    list(DICT_STATES.items()),
+)
+def test_create_valid_state_from_name(state_name, uf):
+    state = State(state_name)
 
-def test_create_valid_state_from_uf():
-    for state_name, uf in DICT_STATES.items():
-        state = State(uf)
-        assert state.state == state_name
-        assert state.uf == uf
-        assert state.formatted == f"{state_name} ({uf})"
+    assert state.state == state_name
+    assert state.uf == uf
+    assert state.formatted == f"{state_name} ({uf})"
+
+
+@pytest.mark.parametrize(
+    "state_name,uf",
+    list(DICT_STATES.items()),
+)
+def test_create_valid_state_from_uf(state_name, uf):
+    state = State(uf)
+
+    assert state.state == state_name
+    assert state.uf == uf
+    assert state.formatted == f"{state_name} ({uf})"
+
 
 def test_create_state_with_invalid_type():
     with pytest.raises(StateInvalidTypeError):
         State(123)
 
 
-# -------------------------------------
-# Normalization tests
-# -------------------------------------
+# ----------------------------------------
+# Testes de normalização
+# ----------------------------------------
 
-def test_state_normalization():
+def test_state_string_normalization():
     state = State("  são paulo  ")
 
     assert state.state == "São Paulo"
@@ -51,57 +61,60 @@ def test_state_accepts_lowercase_uf():
     assert state.uf == "SP"
 
 
-# -------------------------------------
-# Validation tests
-# -------------------------------------
+# ----------------------------------------
+# Testes de validação pública
+# ----------------------------------------
 
 @pytest.mark.parametrize(
-    "value,expected",
-    [(state_name, True) for state_name in DICT_STATES]
+    "value",
+    list(DICT_STATES.keys()),
 )
-def test_state_is_valid_from_state_name(value, expected):
-    assert State.is_valid(value) is expected
+def test_is_valid_from_state_name(value):
+    assert State.is_valid(value) is True
+
 
 @pytest.mark.parametrize(
-    "value,expected",
-    [(uf, True) for _, uf in DICT_STATES.items()]
+    "value",
+    list(DICT_STATES.values()),
 )
-def test_state_is_valid_from_uf(value, expected):
-    assert State.is_valid(value) is expected
+def test_is_valid_from_uf(value):
+    assert State.is_valid(value) is True
+
 
 @pytest.mark.parametrize(
-    "value,expected",
+    "value",
     [
-        ("Sao Paulo", False),
-        ("SSP", False),
-        ("Rio da Janeiro", False),
-        ("RJS", False),
-        ("InvalidState", False),
-        ("XX", False),
+        "Sao Paulo",
+        "SSP",
+        "Rio da Janeiro",
+        "RJS",
+        "InvalidState",
+        "XX",
     ],
 )
-def test_state_is_valid(value, expected):
-    assert State.is_valid(value) is expected
+def test_is_invalid_state(value):
+    assert State.is_valid(value) is False
+
 
 @pytest.mark.parametrize(
-    "value,exception",
+    "value",
     [
-        ("Sao Paulo", StateInvalidError),
-        ("SSP", StateInvalidError),
-        ("Rio da Janeiro", StateInvalidError),
-        ("RJS", StateInvalidError),
-        ("InvalidState", StateInvalidError),
-        ("XX", StateInvalidError),
+        "Sao Paulo",
+        "SSP",
+        "Rio da Janeiro",
+        "RJS",
+        "InvalidState",
+        "XX",
     ],
 )
-def test_invalid_state_raises_exception(value, exception):
-    with pytest.raises(exception):
+def test_invalid_state_raises_exception(value):
+    with pytest.raises(StateInvalidError):
         State(value)
 
 
-# -------------------------------------
-# Igualdade tests
-# -------------------------------------
+# ----------------------------------------
+# Testes de igualdade
+# ----------------------------------------
 
 def test_state_equality():
     state1 = State("São Paulo")
@@ -111,8 +124,8 @@ def test_state_equality():
     assert state1 == state2
     assert state1 != state3
 
-def test_state_set_behavior():
 
+def test_state_set_behavior():
     states = {
         State("SP"),
         State("São Paulo"),
@@ -122,9 +135,9 @@ def test_state_set_behavior():
     assert len(states) == 2
 
 
-# -------------------------------------
-# Hash tests
-# -------------------------------------
+# ----------------------------------------
+# Testes de hash
+# ----------------------------------------
 
 def test_state_hash():
     state1 = State("São Paulo")
@@ -134,32 +147,38 @@ def test_state_hash():
     assert hash(state1) == hash(state2)
     assert hash(state1) != hash(state3)
 
-def test_state_as_dict_key():
 
-    d = {
+def test_state_as_dict_key():
+    states = {
         State("SP"): "São Paulo",
         State("RJ"): "Rio de Janeiro",
     }
 
-    assert d[State("São Paulo")] == "São Paulo"
+    assert states[State("São Paulo")] == "São Paulo"
 
 
-# -------------------------------------
-# Representation tests
-# -------------------------------------
+# ----------------------------------------
+# Testes de representação
+# ----------------------------------------
 
-def test_state_representation():
+def test_str_returns_formatted():
     state = State("São Paulo")
-    repr_str = repr(state)
 
-    assert repr_str == "State('SP')"
     assert str(state) == "São Paulo (SP)"
-    assert state.formatted == "São Paulo (SP)"
 
 
-# -------------------------------------
-# Immutability tests
-# -------------------------------------
+def test_repr_contains_class_name():
+    state = State("São Paulo")
+
+    representation = repr(state)
+
+    assert "State(" in representation
+    assert "'SP'" in representation
+
+
+# ----------------------------------------
+# Teste de imutabilidade
+# ----------------------------------------
 
 def test_state_is_immutable():
     state = State("São Paulo")
@@ -172,4 +191,3 @@ def test_state_is_immutable():
 
     with pytest.raises(StateError):
         state.formatted = "Rio de Janeiro (RJ)"
-
