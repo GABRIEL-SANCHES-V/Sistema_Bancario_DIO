@@ -64,29 +64,4 @@ Caso não haja movimentações:
 Não foram realizadas movimentações
 ```
 
-Regras completas:
 
-→ `docs/banking_rules_v1.md`
-
----
-
-# 📚 Documentação
-
-* Arquitetura → `docs/architecture.md`
-* Domain Driven Design → `docs/ddd.md`
-* Value Objects → `src/domain/value_objects/README.md`
-* Test Strategy(Value Objects) → `tests/unit/domains/value_objects/README.md`
-* ADR → `docs/adr/`
-
----
-
-# 🚀 Evolução do Projeto
-
-Próximas implementações incluem:
-
-* Entities (`Account`, `Transaction`)
-* Casos de uso (`Deposit`, `Withdraw`)
-* API REST
-* Persistência
-* Sistema de autenticação
-* Logs e auditoria
