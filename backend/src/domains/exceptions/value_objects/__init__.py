@@ -17,6 +17,12 @@ from domains.exceptions.value_objects.cpf import *
 
 
 #---------------------------------------------------------------
+# Exceções relacionadas a ClientId
+#---------------------------------------------------------------
+from domains.exceptions.value_objects.client_id import *
+
+
+#---------------------------------------------------------------
 # Exceções relacionadas a Email
 #---------------------------------------------------------------
 from domains.exceptions.value_objects.email import *
@@ -77,6 +83,9 @@ __all__ = [
     "CPFInvalidCheckDigitsError",
     "CPFRepeatedDigitsError",
     "CPFInvalidTypeError",
+
+    "ClientIdError",
+    "ClientIdInvalidTypeError",
 
     "EmailError",
     "EmailInvalidTypeError",
