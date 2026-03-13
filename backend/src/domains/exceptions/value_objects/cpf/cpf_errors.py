@@ -1,11 +1,9 @@
 from domains.exceptions.domain_errors import DomainError
 
 class CPFError(DomainError):
-    """Classe base para erros relacionados ao CPF."""
     pass
 
 class CPFInvalidLengthError(CPFError):
-    """Erro para CPF com comprimento inválido."""
     def __init__(self, received_length: int):
         super().__init__(f"CPF deve ter exatamente 11 números, mas recebeu {received_length}.")
 
