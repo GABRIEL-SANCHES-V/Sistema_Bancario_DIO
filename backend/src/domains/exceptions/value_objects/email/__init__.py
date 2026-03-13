@@ -1,4 +1,4 @@
-from .email_errors import (
+from domains.exceptions.value_objects.email.email_errors import (
     EmailError,
     EmailInvalidTypeError,
 )

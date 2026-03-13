@@ -1,4 +1,4 @@
-from .cpf_errors import (
+from domains.exceptions.value_objects.cpf.cpf_errors import (
     CPFError,
     CPFInvalidLengthError,
     CPFInvalidCheckDigitsError,

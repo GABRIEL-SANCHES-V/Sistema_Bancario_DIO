@@ -1,4 +1,4 @@
-from domains.exceptions.password import (
+from domains.exceptions import (
     PasswordError,
     PasswordInvalidTypeError,
     PasswordTooShortError,

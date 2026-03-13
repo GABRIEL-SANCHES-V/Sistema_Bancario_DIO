@@ -1,4 +1,4 @@
-from ..domain_errors import DomainError
+from domains.exceptions.domain_errors import DomainError
 
 class NameErrorVO(DomainError):
     pass

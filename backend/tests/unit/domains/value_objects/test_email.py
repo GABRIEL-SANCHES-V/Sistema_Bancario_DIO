@@ -1,7 +1,7 @@
 from email_validator import EmailNotValidError
 from hypothesis import given, strategies as st
 from domains.value_objects.email import Email
-from domains.exceptions.email import (
+from domains.exceptions import (
     EmailError,
     EmailInvalidTypeError,
 )

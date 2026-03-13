@@ -1,4 +1,4 @@
-from .address_errors import (
+from domains.exceptions.value_objects.address.address_errors import (
     AddressError,
     AddressInvalidTypeStateError,
     AddressInvalidTypeZipCodeError,

@@ -1,6 +1,6 @@
 from domains.value_objects.password import Password
 from hypothesis import given, strategies as st
-from domains.exceptions.password import (
+from domains.exceptions import (
     PasswordError,
     PasswordInvalidTypeError,
     PasswordTooShortError,

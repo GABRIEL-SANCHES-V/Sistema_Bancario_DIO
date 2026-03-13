@@ -1,4 +1,4 @@
-from .name_errors import (
+from domains.exceptions.value_objects.name.name_errors import (
     NameErrorVO,
     NameInvalidTypeError,
     NameTooShortError,

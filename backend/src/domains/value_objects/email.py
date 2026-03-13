@@ -1,5 +1,5 @@
 from email_validator import validate_email, EmailNotValidError
-from domains.exceptions.email import (
+from domains.exceptions import (
     EmailError,
     EmailInvalidTypeError,
 )

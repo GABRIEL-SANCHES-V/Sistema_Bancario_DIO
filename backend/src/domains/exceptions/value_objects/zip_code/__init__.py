@@ -1,4 +1,4 @@
-from .zip_code_errors import (
+from domains.exceptions.value_objects.zip_code.zip_code_errors import (
     ZipCodeError,
     ZipCodeInvalidTypeError,
     ZipCodeInvalidFormatError,

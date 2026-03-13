@@ -1,4 +1,4 @@
-from .money_errors import (
+from domains.exceptions.value_objects.money.money_errors import (
     MoneyError,
     MoneyInvalidTypeError,
     MoneyInvalidValueError,

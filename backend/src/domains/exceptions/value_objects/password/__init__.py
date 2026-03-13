@@ -1,4 +1,4 @@
-from .password_errors import (
+from domains.exceptions.value_objects.password.password_errors import (
     PasswordError,
     PasswordInvalidTypeError,
     PasswordTooShortError,
