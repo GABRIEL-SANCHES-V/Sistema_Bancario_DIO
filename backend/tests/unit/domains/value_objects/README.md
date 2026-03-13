@@ -1,4 +1,4 @@
-# Estratégia de Testes
+# Estratégia de Testes (Value Objects)
 
 O projeto utiliza **testes automatizados** para garantir a confiabilidade do domínio.
 
