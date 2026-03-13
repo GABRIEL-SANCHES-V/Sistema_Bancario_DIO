@@ -14,7 +14,6 @@ Este projeto implementa um **Sistema Bancário** utilizando:
 
 * Domain Driven Design (DDD)
 * Clean Architecture
-* Value Objects
 * Testes automatizados
 
 O objetivo é construir um domínio robusto e bem modelado que possa evoluir para um sistema bancário completo.
