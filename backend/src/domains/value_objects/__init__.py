@@ -17,6 +17,12 @@ from domains.value_objects.cpf import CPF
 
 
 # -----------------------------------------
+# Value Objects - ClientID
+# -----------------------------------------
+from domains.value_objects.client_id import ClientID
+
+
+# -----------------------------------------
 # Value Objects - Email
 # -----------------------------------------
 from domains.value_objects.email import Email
@@ -62,6 +68,7 @@ __all__ = [
     "Address",
     "BirthDate",
     "CPF",
+    "ClientID",
     "Email",
     "Money",
     "Name",

@@ -11,6 +11,11 @@ from domains.exceptions.value_objects import *
 
 
 #---------------------------------------------------------------
+# Exceções relacionadas a Entities
+#---------------------------------------------------------------
+from domains.exceptions.entities import *
+
+#---------------------------------------------------------------
 # Exportação de todas as exceções
 #---------------------------------------------------------------
 __all__ = [
@@ -69,4 +74,7 @@ __all__ = [
     "MoneyError",
     "MoneyInvalidTypeError",
     "MoneyInvalidValueError",
+
+    "ClinetError",
+    "ClientAttributeError",
 ]
