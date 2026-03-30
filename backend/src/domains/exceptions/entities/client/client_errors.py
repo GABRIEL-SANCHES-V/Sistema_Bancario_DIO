@@ -1,9 +1,9 @@
 from domains.exceptions import DomainError
 
-class ClinetError(DomainError):
+class ClientError(DomainError):
     pass
 
-class ClientAttributeError(ClinetError):
+class ClientAttributeError(ClientError):
 
     def __init__(self, received_key: str):
         self.received_key = received_key

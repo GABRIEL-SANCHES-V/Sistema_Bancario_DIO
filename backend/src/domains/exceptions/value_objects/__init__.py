@@ -17,9 +17,9 @@ from domains.exceptions.value_objects.cpf import *
 
 
 #---------------------------------------------------------------
-# Exceções relacionadas a ClientId
+# Exceções relacionadas a ID de entidades
 #---------------------------------------------------------------
-from domains.exceptions.value_objects.client_id import *
+from domains.exceptions.value_objects.id_entities import *
 
 
 #---------------------------------------------------------------
@@ -86,6 +86,12 @@ __all__ = [
 
     "ClientIdError",
     "ClientIdInvalidTypeError",
+
+    "AccountIdError",
+    "AccountIdInvalidTypeError",
+
+    "TransactionIdError",
+    "TransactionIdInvalidTypeError",
 
     "EmailError",
     "EmailInvalidTypeError",

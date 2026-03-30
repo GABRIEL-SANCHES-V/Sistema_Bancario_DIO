@@ -22,7 +22,6 @@ class Client:
     )
     def __init__(
         self,
-        client_id: ClientID,
         name: Name,
         email: Email,
         cpf: CPF,
@@ -30,7 +29,7 @@ class Client:
         birth_date: BirthDate,
         address: Address,
         ):
-        self._client_id = client_id
+        self._client_id = ClientID()
         self._name = name
         self._email = email
         self._cpf = cpf

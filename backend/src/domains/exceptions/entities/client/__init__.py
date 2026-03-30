@@ -1,10 +1,10 @@
 from domains.exceptions.entities.client.client_errors import (
-    ClinetError,
+    ClientError,
     ClientAttributeError,
 )
 
 
 __all__ = [
-    'ClinetError',
-    'ClientAttributeError',
+    "ClientError",
+    "ClientAttributeError",
 ]

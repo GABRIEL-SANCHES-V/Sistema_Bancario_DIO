@@ -1,5 +1,4 @@
 from domains.exceptions import ClientAttributeError
-from hypothesis import given, strategies as st
 from domains.entities.client import Client
 from domains.value_objects import (
     State,
@@ -17,7 +16,6 @@ import pytest
 @pytest.fixture
 def valid_client():
     return Client(
-        client_id=1,
         name=Name("John Doe"),
         email=Email("john.doe@example.com"),
         cpf=CPF("12345678909"),
@@ -40,7 +38,6 @@ def valid_client():
 # ---------------------------------------------------------------
 
 def test_client_creation(valid_client):
-    assert valid_client.client_id == 1
     assert valid_client.name.name == "John Doe"
     assert valid_client.email.value == "john.doe@example.com"
     assert valid_client.cpf.value == "12345678909"
@@ -61,9 +58,6 @@ def test_client_creation(valid_client):
 # ---------------------------------------------------------------
 
 def test_client_immutability(valid_client):
-    with pytest.raises(ClientAttributeError):
-        valid_client.client_id = 2
-    
     with pytest.raises(ClientAttributeError):
         valid_client.cpf = CPF("12345678909")
 

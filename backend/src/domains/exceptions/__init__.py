@@ -15,6 +15,7 @@ from domains.exceptions.value_objects import *
 #---------------------------------------------------------------
 from domains.exceptions.entities import *
 
+
 #---------------------------------------------------------------
 # Exportação de todas as exceções
 #---------------------------------------------------------------
@@ -75,6 +76,19 @@ __all__ = [
     "MoneyInvalidTypeError",
     "MoneyInvalidValueError",
 
-    "ClinetError",
+    "ClientError",
     "ClientAttributeError",
+
+    "AccountIdError",
+    "AccountIdInvalidTypeError",
+
+    "TransactionIdError",
+    "TransactionIdInvalidTypeError",
+
+    "TransactionError",
+    "TransactionAttributeError",
+    "TransactionDepositError",
+    "TransactionWithdrawalError",
+    "TransactionTransferError",
+    "TransactionStatusTransitionError",
 ]

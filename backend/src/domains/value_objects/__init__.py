@@ -1,4 +1,10 @@
 # -----------------------------------------
+# Value Objects - AccountID
+# -----------------------------------------
+from domains.value_objects.account_id import AccountID
+
+
+# -----------------------------------------
 # Value Objects - Address
 # -----------------------------------------
 from domains.value_objects.address import Address
@@ -59,12 +65,19 @@ from domains.value_objects.state import State
 
 
 # -----------------------------------------
+# Value Objects - TransactionID
+# -----------------------------------------
+from domains.value_objects.transaction_id import TransactionID
+
+
+# -----------------------------------------
 # Value Objects - Zip Code
 # -----------------------------------------
 from domains.value_objects.zip_code import ZipCode
 
 
 __all__ = [
+    "AccountID",
     "Address",
     "BirthDate",
     "CPF",
@@ -75,5 +88,6 @@ __all__ = [
     "Password",
     "PhoneNumber",
     "State",
+    "TransactionID",
     "ZipCode",
 ]
