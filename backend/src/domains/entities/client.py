@@ -10,6 +10,26 @@ from domains.value_objects import (
 from domains.exceptions import ClientAttributeError
 
 class Client:
+    """
+        Entidade que representa um cliente.
+
+        Atributos:
+            - client_id: Identificador único do cliente (imutável)
+            - name: Nome do cliente
+            - email: Email do cliente
+            - cpf: CPF do cliente (imutável)
+            - phone_number: Número de telefone do cliente
+            - birth_date: Data de nascimento do cliente
+            - address: Endereço do cliente
+
+        Métodos:
+            - change_name: Altera o nome do cliente
+            - change_email: Altera o email do cliente
+            - change_phone_number: Altera o número de telefone do cliente
+            - change_address: Altera o endereço do cliente
+            - change_birth_date: Altera a data de nascimento do cliente
+            - age: Retorna a idade do cliente
+    """
 
     __slots__ = (
         '_client_id',

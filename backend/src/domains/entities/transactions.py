@@ -1,6 +1,6 @@
-from enum import Enum
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Optional
+from enum import Enum
 
 from domains.value_objects import (
     Money,
@@ -32,6 +32,27 @@ class StatusTransaction(Enum):
 
 
 class Transaction:
+    """
+        Entidade que representa uma transação bancária.
+
+        Atributos:
+            - transaction_id: Identificador único da transação (imutável)
+            - amount: Valor da transação
+            - type_transaction: Tipo da transação (deposito, saque, transferência, etc.)
+            - from_account: Identificador da conta de origem (opcional)
+            - to_account: Identificador da conta de destino (opcional)
+            - status: Status da transação (pendente, bem-sucedida, falha)
+            - timestamp: Data e hora da transação
+
+        Métodos:
+            - mark_as_successful: Marca a transação como bem-sucedida
+            - mark_as_failed: Marca a transação como falha
+            - is_credit_for: Verifica se a transação é um crédito para uma conta
+            - is_debit_for: Verifica se a transação é um débito para uma conta
+            - is_successful: Verifica se a transação é bem-sucedida
+            - is_pending: Verifica se a transação está pendente
+            - is_failed: Verifica se a transação falhou
+    """
 
     __slots__ = (
         '_transaction_id',
@@ -56,7 +77,7 @@ class Transaction:
         self._from_account = from_account
         self._to_account = to_account
         self._status = StatusTransaction.PENDING
-        self._timestamp = datetime.now()
+        self._timestamp = datetime.now(UTC)
 
         self._validate()
 
@@ -96,6 +117,7 @@ class Transaction:
     def status(self):
         return self._status
 
+
     # ---------------------------------------------------------------
     # Regras de Domínio
     # ---------------------------------------------------------------
@@ -130,21 +152,40 @@ class Transaction:
 
         self._status = StatusTransaction.FAILED
 
+
+    # ---------------------------------------------------------------
+    # Métodos de Negócio
+    # ---------------------------------------------------------------
+
+    def is_credit_for(self, account_id: AccountID) -> bool:
+        return self._to_account == account_id
+
+    def is_debit_for(self, account_id: AccountID) -> bool:
+        return self._from_account == account_id
+
+    def is_successful(self) -> bool:
+        return self._status == StatusTransaction.SUCCESSFUL
+
+    def is_pending(self) -> bool:
+        return self._status == StatusTransaction.PENDING
+
+    def is_failed(self) -> bool:
+        return self._status == StatusTransaction.FAILED
+    
+
     # ---------------------------------------------------------------
     # Representação
     # ---------------------------------------------------------------
 
     def __str__(self):
         return (
-            f"\n{'-'*50}\n"
-            f"Transaction ID: {self.transaction_id}\n"
-            f"Type: {self.type_transaction.value}\n"
-            f"Amount: {self.amount}\n"
-            f"From: {self.from_account}\n"
-            f"To: {self.to_account}\n"
-            f"Status: {self.status.value}\n"
-            f"Timestamp: {self.timestamp}\n"
-            f"{'-'*50}"
+            f"{self._type_transaction.value.upper()} | "
+            f"id={self._transaction_id} | "
+            f"amount={self._amount} | "
+            f"from={self._from_account} | "
+            f"to={self._to_account} | "
+            f"status={self._status.value} | "
+            f"at={self._timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
         )
 
     def __repr__(self):
